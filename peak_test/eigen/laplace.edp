@@ -1,0 +1,178 @@
+/***********************************************************************
+	> File Name: laplace.edp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 2020/09/21 星期一 10时57分10秒
+ ***********************************************************************/
+
+macro dimension() 3 //E.O.M
+  
+load "SLEPc" // 加载“SLEPc”特征值求解器
+  
+include "macro_ddm.idp"
+include "Operator.idp"
+include "getARGV.idp"
+  
+macro fe P1 //E.O.M.
+macro qf qfV=qfV5 //E.O.M. 
+
+// 墙钟时间：开始计时
+real start = mpiWtime();
+
+//------------------------------
+//   Parameters
+//------------------------------
+// 网格剖分密度
+int nn = getARGV("-nn", 16);
+// 求解区域边界标识
+int[int] labs = 1 : 6;
+int refi = getARGV("-refi", 0);
+// 设定要求解的特征值个数
+int nEV = getARGV("-nev", 1);
+// 设定shift值
+real sigma = getARGV("-sigma", 0.);
+
+//------------------------------
+//   Analytic Funtions
+//------------------------------
+/// 选取||u||_L2 = 1的函数作为精确解
+func u = 2.*sqrt(2) * sin(pi*x)*sin(pi*y)*sin(pi*z);
+func ux = 2.*sqrt(2)*pi * cos(pi*x)*sin(pi*y)*sin(pi*z);
+func uy = 2.*sqrt(2)*pi * sin(pi*x)*cos(pi*y)*sin(pi*z);
+func uz = 2.*sqrt(2)*pi * sin(pi*x)*sin(pi*y)*cos(pi*z);
+func uD = u;
+
+//------------------------------
+//   Building Mesh
+//------------------------------
+meshN Th = cube(nn, nn, nn);
+fespace Ph(Th, P0);
+Ph part;
+if (mpirank == 0) partitionerSeq(part[], Th, mpisize);
+partitionerPar(part[], Th, mpiCommWorld, mpisize);
+meshN ThNo = trunc(Th, abs(part-mpirank)<1e-1, split=2^refi, label=-111111, renum=1);
+Th = ThNo;
+reconstructDmesh(Th);
+
+//------------------------------
+//   Building FE-Space
+//------------------------------
+// 根据分布式网格Th和fe定义分布式有限元空间Vh
+fespace Vh(Th, fe);
+// 定义Vh中一组分布式有限元函数uh
+Vh[int] uh(nEV);
+
+//-------------------------------
+//   Defining Variational Form
+//-------------------------------
+varf vA(u, v) = intN(Th, qf) (grad(u)'*grad(v)) + on(labs, u=uD);
+varf vB(u, v) = intN(Th, qf) (u * v) + on(labs, u=uD);
+                              
+//-------------------------------
+//   Assembling Matrix and RHS
+//-------------------------------
+// 定义PETSc矩阵并分配空间
+Mat dA, dB;
+createMat(Th, dA, fe);
+createMat(Th, dB, fe);
+// 组装刚度矩阵和质量矩阵（直接形成PETSc矩阵）
+/// 对称方式处理边界 
+dA = vA(Vh, Vh, tgv=-2);
+/// 边界对应的行置0（tgv=-10）
+dB = vB(Vh, Vh, tgv=-20);
+                              
+//-------------------------------
+//   Solving Linear Systems
+//-------------------------------
+real[int] lambdah(nEV);
+// 设定SLEPc求解器参数
+//string params = "-pc_type gamg -ksp_type hpddm -ksp_max_it 5 -ksp_rtol 1e-8";
+//string params = "-pc_type asm -sub_pc_type cholesky -sub_pc_factor_mat_solver_type mumps -ksp_type hpddm -ksp_max_it 5 -ksp_rtol 1e-8";
+string params = "-pc_type hpddm -pc_hpddm_coarse_p " + mpisize + " -pc_hpddm_coarse_pc_type cholesky -pc_hpddm_coarse_pc_factor_mat_solver_type mumps " + "-pc_hpddm_levels_1_eps_nev 15 -pc_hpddm_levels_1_sub_pc_type cholesky -pc_hpddm_levels_1_sub_pc_factor_mat_solver_type mumps " + "-pc_hpddm_levels_1_st_pc_type cholesky -pc_hpddm_levels_1_st_pc_factor_mat_solver_type mumps -pc_hpddm_has_neumann -pc_hpddm_define_subdomains " + "-ksp_type hpddm -ksp_max_it 5 -ksp_rtol 1e-8";
+set(dA, sparams="-prefix_push st_ "+params+" -prefix_pop", prefix="st_");
+string slepcparams = 
+		"-eps_nev " + nEV         +  //要求解的特征值个数
+		" -eps_type lobpcg "      +
+		"-eps_lobpcg_blocksize " + 2*nEV +
+		" -st_type precond "      +
+		"-st_matstructure same "  +
+		"-bv_orthog_block svqb "  +
+		"-bv_type contiguous "    +
+		"-eps_gen_hermitian";
+
+		/*
+		" -eps_target " + sigma   +  //shift值
+		" -eps_type krylovschur " +  //Krylov-Schur方法 
+		"-eps_tol 1e-8 "          +  //求解特征值容忍量
+		"-eps_gen_hermitian "     +  //对称特征值问题
+		"-st_type sinvert "       +  //shift and invert
+		"-st_pc_type bjacobi "    +  //求解线性方程组的预条件子
+		"-st_ksp_type cg "      +  //求解线性方程组使用CG迭代
+		"-st_ksp_rtol 1e-10";  //求解线性方程组的相对容忍量
+		*/
+
+// 调用SLEPc中EPSSolve求解线性特征值问题
+mpiBarrier(mpiCommWorld);
+real cpu = mpiWtime();
+EPSSolve(dA, dB, values=lambdah, vectors=uh, sparams=slepcparams);
+if (mpirank == 0)
+{
+	cout << "=======================================" << endl;
+	cout << "SLEPc time: " << mpiWtime()-cpu << " s" << endl;
+	cout << "=======================================" << endl;
+}
+// 有时收敛的特征对个数会多于指定的nEV个，做resize来得到我们想要的特征对
+lambdah.resize(nEV);
+uh.resize(nEV);
+
+//----------------------------
+//   Display Time
+//----------------------------
+int dNT = ThNo.nt;
+int NT;
+mpiAllReduce(dNT, NT, mpiCommWorld, mpiSUM);
+real[int] puh;
+ChangeNumbering(dA, uh[0][], puh);
+int dndofs = puh.n;
+int ndofs;
+mpiAllReduce(dndofs, ndofs, mpiCommWorld, mpiSUM);
+if (mpirank == 0)
+{
+	cout << "-------------------------------" << endl;
+	cout << "Elements #: " << NT << endl;
+	cout << "Dofs #: " << ndofs << endl;
+	cout << "-------------------------------" << endl;
+    cout << "tttttttttttttttttttttttttttttttttttttttttttt" << endl;
+    cout << "Elapsed time: " << mpiWtime()-start << " s" << endl;
+    cout << "tttttttttttttttttttttttttttttttttttttttttttt" << endl;
+}
+                               
+//-------------------------------
+//   Computing Error
+//-------------------------------
+// 注：这里仅考虑最小特征值及其相应特征向量的误差
+real lambdaError = abs(dimension*pi^2 - lambdah[0]); //3*pi^2为精确特征值
+real[int] efError(2); //用于存储non-overlapping区域上的特征函数L^2误差
+// 由于uh[0]和-uh[0]都是特征值问题对应于lambdah[0]的特征函数，因此需要找到u-uh[0]和u+uh[0]的L^2最小值。下面给出了寻找最小值的方式，当然也可通过L^2内积（u, uh[0]）的符号来确定需要选择uh[0]还是-uh[0]来作为计算误差用的数值解。
+/// 计算相应于最小特征值的特征函数的L2误差
+efError[0] = intN(ThNo, qf) ((u - uh[0])^2);
+efError[1] = intN(ThNo, qf) ((u + uh[0])^2);
+real[int] efErrorReduce(2);
+mpiAllReduce(efError, efErrorReduce, mpiCommWorld,mpiSUM);
+real L2Error = efErrorReduce.min;
+L2Error = sqrt(L2Error);
+/// 计算特征函数的能量误差
+efError[0] = intN(ThNo, qf) ((ux - dx(uh[0]))^2 + (uy - dy(uh[0]))^2 + (uz - dz(uh[0]))^2);
+efError[1] = intN(ThNo, qf) ((ux + dx(uh[0]))^2 + (uy + dy(uh[0]))^2 + (uz + dz(uh[0]))^2);
+mpiAllReduce(efError, efErrorReduce, mpiCommWorld,mpiSUM);
+real energyError = efErrorReduce.min;
+energyError = sqrt(energyError);
+/// 输出误差结果和程序运行时间
+if (mpirank == 0)
+{
+    cout << "===================================================" << endl;
+    cout << "|lambda - lambda_h| = " << lambdaError << endl;
+    cout << "||u - uh||_0 = " << L2Error << endl;
+    cout << "||u - uh||_a = " << energyError << endl;
+    cout << "===================================================" << endl;
+}

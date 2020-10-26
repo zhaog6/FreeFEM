@@ -1,0 +1,75 @@
+Sender: LSF System <lsfadmin@c6u15n04>
+Subject: Job 991578: <mywork> in cluster <hpc.lsec.cc.ac.cn> Done
+
+Job <mywork> was submitted from host <ln01> by user <zhaogang> in cluster <hpc.lsec.cc.ac.cn>.
+Job was executed on host(s) <36*c6u15n04>, in queue <batch>, as user <zhaogang> in cluster <hpc.lsec.cc.ac.cn>.
+                            <36*c1u10n02>
+                            <36*c1u15n03>
+                            <36*c6u19n01>
+                            <36*a6u03n03>
+                            <36*c1u03n03>
+                            <36*a6u08n03>
+                            <36*c1u03n04>
+                            <36*c2u22n01>
+                            <36*c3u12n01>
+                            <36*c2u10n04>
+                            <36*c2u15n04>
+                            <36*c6u12n02>
+                            <36*c6u17n01>
+                            <36*c6u17n02>
+</share/home/zhaogang> was used as the home directory.
+</share/home/zhaogang/zg/FreeFEM/Labs/peak_test/eigen> was used as the working directory.
+Started at Tue Sep 22 22:29:38 2020
+Results reported on Tue Sep 22 22:45:24 2020
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+mpiexec.hydra -genvall /share/home/zhaogang/zg/FreeFEM/New_Version/FreeFem-sources/src/mpi/FreeFem++-mpi laplace.edp -v 0 -nn 64 -refi 2 -nev 20
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   506027.50 sec.
+    Max Memory :                                 415835 MB
+    Average Memory :                             318884.81 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Processes :                              555
+    Max Threads :                                1095
+
+The output (if any) follows:
+
+Petsc Release Version 3.13.5, Sep 01, 2020 
+       The PETSc Team
+    petsc-maint@mcs.anl.gov
+ https://www.mcs.anl.gov/petsc/
+See docs/changes/index.html for recent updates.
+See docs/faq.html for problems.
+See docs/manualpages/index.html for help. 
+Libraries linked from /share/home/zhaogang/zg/FreeFEM/New_Version/ff-petsc/r/lib
+----------------------------------------
+=======================================
+SLEPc time: 871.526 s
+=======================================
+-------------------------------
+Elements #: 100663296
+Dofs #: 16974593
+-------------------------------
+tttttttttttttttttttttttttttttttttttttttttttt
+Elapsed time: 928.643 s
+tttttttttttttttttttttttttttttttttttttttttttt
+===================================================
+|lambda - lambda_h| = 0.00206119
+||u - uh||_0 = 4.14022e-05
+||u - uh||_a = 0.0454009
+===================================================
+
+
+PS:
+
+Read file <err.dat> for stderr output of this job.
+

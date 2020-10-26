@@ -1,0 +1,73 @@
+/***********************************************************************
+	> File Name: parallel_interpolate.edp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 09/18/2020 Friday 09:08:13 PM
+ ***********************************************************************/
+
+macro dimension 3 //
+
+load "PETSc"
+
+include "macro_ddm.idp"
+include "Operator.idp"
+include "getARGV.idp"
+
+macro fe P1 //
+
+int nn = getARGV("-nn", 16);
+int[int] labs = 1 : 6;
+int refi = getARGV("-refi", 1);
+
+func u = sin(pi*x) * sin(pi*y) * sin(pi*z);
+func ux = pi * cos(pi*x) * sin(pi*y) * sin(pi*z);
+func uy = pi * sin(pi*x) * cos(pi*y) * sin(pi*z);
+func uz = pi * sin(pi*x) * sin(pi*y) * cos(pi*z);
+func uxx = - pi^2 * u;
+func uyy = uxx;
+func uzz = uxx;
+func f = - uxx - uyy - uzz;
+
+meshN TH = cube(nn, nn, nn);
+buildDmesh(TH);
+fespace PH(TH, P0);
+PH part;
+createPartition(TH, part[], P0);
+meshN THNo = trunc(TH, part>1e-1, label=-111111, renum=1);
+meshN Th = trunc(TH, part>1e-1, split=2^refi, label=-111111, renum=1);
+meshN ThNo = Th;
+reconstructDmesh(Th);
+
+fespace VH(TH, fe);
+fespace Vh(Th, fe);
+VH uH;
+Vh uh;
+
+Mat dAH, dAh, P;
+createMat(TH, dAH, fe);
+createMat(Th, dAh, fe);
+transferMat(TH, fe, dAH, Th, fe, dAh, P);
+varf vA(u, v) = intN(Th) (grad(u)'*grad(v)) + intN(Th) (f * v) + on(labs, u=0);
+dAh = vA(Vh, Vh, tgv=-1);
+real[int] rhsh = vA(0, Vh, tgv=-1);
+set(dAh, sparams="-pc_type gamg -ksp_rtol 1e-8 -ksp_converged_reason");
+uh[] = dAh^-1 * rhsh;
+
+MatPtAP(dAh, P, dAH);
+//ObjectView(dAH, format="info");
+//ObjectView(dAh, format="info");
+varf vB(u, v) = intN(TH) (grad(u)'*grad(v)) + intN(TH) (f * v) + on(labs, u=0);
+//dAH = vB(VH, VH, tgv=-1);
+real[int] rhsH = vB(0, VH, tgv=-1);
+set(dAH, sparams="-pc_type gamg -ksp_rtol 1e-8 -ksp_converged_reason");
+uH[] = dAH^-1 * rhsH;
+
+real denergyError = intN(ThNo) ((ux - dx(uh))^2 + (uy - dy(uh))^2 + (uz - dz(uh))^2);
+real energyError;
+mpiAllReduce(denergyError, energyError, mpiCommWorld, mpiSUM);
+energyError = sqrt(energyError);
+if (mpirank == 0) cout << "||u - uh||_a = " << energyError << endl;
+denergyError = intN(THNo) ((ux - dx(uH))^2 + (uy - dy(uH))^2 + (uz - dz(uH))^2);
+mpiAllReduce(denergyError, energyError, mpiCommWorld, mpiSUM);
+energyError = sqrt(energyError);
+if (mpirank == 0) cout << "||u - uH||_a = " << energyError << endl;
