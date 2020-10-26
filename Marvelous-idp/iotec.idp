@@ -1,0 +1,46 @@
+//////////////////////////////////////////////////////////////////////////
+/**
+ * @ File Name: iotec.idp
+ * @ Author: Zhao Gang
+ * @ Mail: zhaog6@lsec.cc.ac.cn
+ * @ Created Time: 01/08/2019 Tuesday 17:18:26
+ * @ Modified Time: 03/23/2019 Saturday 11:49:50
+ * @ Brief: 
+ */
+/////////////////////////////////////////////////////////////////////////
+
+macro savetec(filename, Th, u, U) 
+{
+    ofstream outfile(filename);
+    outfile << "VARIABLES = \"X\", \"Y\", \""+U+"\"" << endl;
+    outfile << "ZONE N = " << Th.nv << ", E = " << Th.nt << ", F = FEPOINT, ET = TRIANGLE" << endl;
+    for (int j = 0; j < Th.nv; ++j)
+        outfile << Th(j).x << " " << Th(j).y << " " << u[][j] << endl;
+    outfile << endl;
+    for (int i = 0; i < Th.nt; ++i)
+        outfile << Th[i][0]+1 << " " << Th[i][1]+1 << " " << Th[i][2]+1 << endl;
+} //
+
+macro savetec2(filename, Th, u, v, U, V)
+{
+    ofstream outfile(filename);
+    outfile << "VARIABLES = \"X\", \"Y\", \""+U+"\", \""+V+"\"" << endl;
+    outfile << "ZONE N = " << Th.nv << ", E = " << Th.nt << ", F = FEPOINT, ET = TRIANGLE" << endl;
+    for (int j = 0; j < Th.nv; ++j)
+        outfile << Th(j).x << " " << Th(j).y << " " << u[][j] << " " << v[][j] << endl;
+    outfile << endl;
+    for (int i = 0; i < Th.nt; ++i)
+        outfile << Th[i][0]+1 << " " << Th[i][1]+1 << " " << Th[i][2]+1 << endl;
+} //
+
+macro savetec3(filename, Th, u, v, w, U, V, W)
+{
+    ofstream outfile(filename);
+    outfile << "VARIABLES = \"X\", \"Y\", \"Z\", \""+U+"\", \""+V+"\", \""+W+"\"" << endl;
+    outfile << "ZONE N = " << Th.nv << ", E = " << Th.nt << ", F = FEPOINT, ET = TETRAHEDRON" << endl;
+    for (int j = 0; j < Th.nv; ++j)
+        outfile << Th(j).x << " " << Th(j).y << " " << Th(j).z << " " << u[][j] << " " << v[][j] << " " << w[][j] << endl;
+    outfile << endl;
+    for (int i = 0; i < Th.nt; ++i)
+        outfile << Th[i][0]+1 << " " << Th[i][1]+1 << " " << Th[i][2]+1 << " " << Th[i][3]+1 << endl;
+} //

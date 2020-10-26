@@ -1,0 +1,162 @@
+//////////////////////////////////////////////////////////////////////////
+/**
+ * @ File Name: Accelerator.idp
+ * @ Author: Zhao Gang
+ * @ Mail: zhaog6@lsec.cc.ac.cn
+ * @ Created Time: 10/25/2020 Sunday 15:00:01
+ * @ Brief: 
+ */
+/////////////////////////////////////////////////////////////////////////
+/**
+ * Wh:           FE-space on Th <type: fespace>
+ * WhNo:         FE-space on ThNo <type: fespace>
+ * rhoeh:        rho_out <type: Wh>
+ * rhoehfold:    rho_in <type: Wh>
+ * rhoehfdamp:   to output <type: Wh>
+ * FrhodenseNo:  defined by "real[int, int] FrhodenseNo(1, 1);" out of nonlinear loops <type: real[int, int]>
+ * Frhodense:    defined by "real[int, int] Frhodense(1, 1);" out of nonlinear loops <type: real[int, int]>
+ * rhoindense:   defined by "real[int, int] rhoindense(1, 1);" out of nonlinear loops <type: real[int, int]>
+ * MhNo:         mass matrix <type: matrix> [defined by "varf vMhNo(u, v) = intN(ThNo) (u * v); matrix MhNo = vMhNo(WhNo, WhNo);"]
+ * damp:         damping coefficient (\beta on dissertation) <type: real>
+ * it:           iterative step <type: int>
+ * stage:        contraction-deflation size <type: int>
+ * depth:        # of steps for multistep <type: int>
+ *
+ *-----------------------------------------------------------------------
+ *
+ * Remark: all of variable names can be changed individually, the usage of the code is as follows:
+ * 
+ * Example:
+ *
+ * fespace Vh(Th, fe), VhNo(ThNo, fe);  // that is your fespace which had been defined before
+ * Vh uh, uhold, uhdamp;
+ * ...
+ * ...
+ * ...
+ * varf vMhNo(u, v) = intN(ThNo) (u * v);
+ * matrix MhNo = vMhNo(VhNo, VhNo);
+ * int depth = getARGV("-depth", 5);
+ * int stage = 0;
+ * real[int, int] mat1(1, 1), mat2(1, 1), mat3(1, 1);
+ * int damp = 1.;
+ * for (int iter = 0; iter < 1e+5; ++iter)
+ * {
+ *     ...
+ *     ...
+ *     ...
+ *     
+ *     if (iter == 1) damp = getARGV("-damp", 0.5);
+ *     // this way might look a little stupid if one write the Anderson mixed scheme as the interface function "Anderson(...)".
+ *     // But there is a big room to improve :)
+ *     Anderson(Vh, VhNo, uh, uhold, uhdamp, mat1, mat2, mat3, MhNo, damp, iter, stage, depth);
+ *     uh = uhdamp;
+ *
+ *     ... your criterion of nonlinear iteration
+ *     
+ *     uhold = uh;  // Don't forget to update uhold from the previous step
+ * }
+ */
+
+//---------------------------
+//   Anderson Accelerator
+//---------------------------
+NewMacro Anderson(Wh, WhNo, rhoeh, rhoehfold, rhoehfdamp, FrhodenseNo, Frhodense, rhoindense, MhNo, damp, it, stage, depth)
+{
+	mpiBarrier(mpiCommWorld);
+	real cpuAnderson = mpiWtime();
+	real[int, int] dFtMFdense(1, 1), FtMFdense(1, 1);
+	Wh wh = rhoeh - rhoehfold;  // F:=rho_out-rho_in
+	WhNo whNo = wh;
+	if (it >= depth-1)
+	{
+		matrix FrhoNo = FrhodenseNo;
+		matrix Frho = Frhodense;
+		real[int] e(stage);
+		e = 1.;
+		matrix deltaF = whNo[] * e';
+		FrhoNo = deltaF - FrhoNo;  // F(n) - F in ThNo
+		deltaF = wh[] * e';
+		Frho = deltaF - Frho;  // F(n) - F in Th
+		deltaF = MhNo * FrhoNo;
+		matrix FtMF = FrhoNo' * deltaF;
+		real[int] de = deltaF' * whNo[];
+		mpiAllReduce(de, e, mpiCommWorld, mpiSUM);
+		dFtMFdense.resize(stage, stage);
+		FtMFdense.resize(stage, stage);
+		real[int] entity(stage);
+		entity = 0;
+		for (int j = 0; j < stage; ++j)
+		{
+			entity[j] = 1;
+			dFtMFdense(:, j) = FtMF * entity;
+			entity[j] = 0;
+		}
+		mpiAllReduce(dFtMFdense, FtMFdense, mpiCommWorld, mpiSUM);
+		FtMF = FtMFdense;
+		if (getARGV("-anderson_view_mat", 0))
+		{
+			if (mpirank == 0)
+			{
+				cout << "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[" << endl;
+				cout << FtMFdense << endl;
+				cout << "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[" << endl;
+			}
+		}
+		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+		/*
+		   matrix I = eye(stage);
+		   FtMF += 1e-8*I;
+		 */
+		//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		Mat dFtMF(FtMF);
+		set(dFtMF, sparams="-pc_type gamg -ksp_type bcgs -ksp_rtol 1e-8");
+		real[int] c(stage);
+		c = 0;
+		verbosity = 1;
+		c = dFtMF^-1 * e;
+		verbosity = 0;
+		if (getARGV("-anderson_view_damping", 0))
+		{
+			if (mpirank == 0)
+			{
+				cout << "-----------------------------------------" << endl;
+				cout << "Anderson relaxation factor:" << endl;
+				cout << c << endl;
+				cout << "-----------------------------------------" << endl;
+			}
+		}
+		real[int] Fbar = Frho * c;
+		Fbar = wh[] - Fbar;
+		real[int] rhoinbar = rhoindense * c;
+		rhoinbar += (1 - c.sum) * rhoehfold[];
+		rhoehfdamp[] = damp*Fbar + rhoinbar;
+		real minrhoehfdamp = rhoehfdamp[].min;
+		if (mpirank == 0) cout << "Minimal of rhoehfdamp = " << minrhoehfdamp << endl;
+		rhoehfdamp = abs(rhoehfdamp);
+		stage -= 1;
+	}
+	else
+	{
+		rhoehfdamp = damp*rhoeh + (1-damp)*rhoehfold;
+		//stage = 0;
+	}
+
+	rhoindense.resize(Wh.ndof, stage+1);
+	if (it >= depth-1)
+		for (int j = 0; j < stage; ++j)
+			rhoindense(:, j) = rhoindense(:, j+1);
+	rhoindense(:, stage) = rhoehfold[];
+	FrhodenseNo.resize(WhNo.ndof, stage+1);
+	if (it >= depth-1)
+		for (int j = 0; j < stage; ++j)
+			FrhodenseNo(:, j) = FrhodenseNo(:, j+1);
+	FrhodenseNo(:, stage) = whNo[];
+	Frhodense.resize(Wh.ndof, stage+1);
+	if (it >= depth-1)
+		for (int j = 0; j < stage; ++j)
+			Frhodense(:, j) = Frhodense(:, j+1);
+	Frhodense(:, stage) = wh[];
+	stage += 1;
+	if (mpirank == 0) cout << " --- Anderson acceleration process: " << mpiWtime()-cpuAnderson << " s" << endl;
+}
+EndMacro

@@ -1,0 +1,40 @@
+/***********************************************************************
+	> File Name: Matrix.idp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 2019/03/25 星期一 10时08分02秒
+	> Remark: Need to load "PETSc" and "SLEPc"
+ ***********************************************************************/
+
+// Matrix operations
+func real tr(matrix& A)
+{
+	real[int] Aii = A.diag;
+	return Aii.sum;
+}
+
+func real cond(matrix& A)
+{
+	assert(A.n == A.m);
+	real[int] minev(1);
+	real[int] maxev(1);
+	real[int] Bii(A.n);
+	Bii = 1;
+	matrix B = Bii;
+	Mat dA(A);
+	Mat dB(dA, B);
+	// setting SLEPc parameters
+	string ssparams = 
+		" -eps_nev " + 1         + // Number of eigenvalues
+		" -eps_type krylovschur" +
+		" -eps_target "+ 0       + // Shift value
+		" -eps_gen_hermitian"    + // The problem is symmetric
+		" -st_type sinvert "     +
+		" -st_pc_type lu"        +
+		" -st_pc_factor_mat_solver_type mumps";
+	EPSSolve(dA, dB, values=minev, sparams=ssparams);
+	EPSSolve(dB, dA, values=maxev, sparams=ssparams);
+	maxev = 1./maxev;
+	maxev ./= minev;
+	return maxev[0];
+}

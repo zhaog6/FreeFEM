@@ -1,0 +1,113 @@
+//////////////////////////////////////////////////////////////////////////
+/**
+ * @ File Name: ExtractDofsonBorderPar.idp
+ * @ Author: Zhao Gang
+ * @ Mail: zhaog6@lsec.cc.ac.cn
+ * @ Created Time: 10/27/2019 Sunday 13:28:59
+ * @ Brief: 
+ */
+/////////////////////////////////////////////////////////////////////////
+
+macro ExtractDofsonBorder(labs, Wh, doflabs, orient, opt)
+{
+	if (opt == 1)
+	{
+		meshN Th = Wh.Th;
+		fespace VhExtractDofsonBorder(Th, P1);
+		VhExtractDofsonBorder abslabs;
+		IFMACRO(dimension, 2)
+		if (orient)
+		{
+			varf vPbabciss(u, v) = intN(Th, qft=qf1pTlump) (u*v*1e-8/area) 
+				+ intN1(Th,labs,qfe=qf1pElump) ([dx(u), dy(u)]'*[-N.y, +N.x]*v) 
+				+ intN1(Th,labs,qfe=qf1pElump) (orient*v);
+			matrix Pbabciss = vPbabciss(Wh, Wh);
+			real[int] PbabcissRHS = vPbabciss(0, Wh);
+			abslabs[] = Pbabciss^-1 * PbabcissRHS;
+		}
+		else abslabs = 1.; /* no sorting */
+		real abslabsmax = 2*abslabs[].max;
+		varf vlabsneg(unused, v) = on(labs, unused=abslabs-abslabsmax);
+		if(0) plot(abslabs, wait=1);
+		ENDIFMACRO
+		IFMACRO(dimension, 3);
+		varf vlabsneg(unused, v) = on(labs, unused=-1);
+		ENDIFMACRO
+		real[int] absc = vlabsneg(0, Wh);
+		doflabs.resize(Wh.ndof);
+		doflabs = 0:Wh.ndof-1;
+		sort(absc, doflabs);
+		absc = absc ? 1 : 0;
+		doflabs.resize(absc.sum+0.5);
+	}
+	else if (opt == 2)
+	{
+		meshN Th = Wh.Th;
+		fespace VhExtractDofsonBorder(Th, [P1, P1]);
+		VhExtractDofsonBorder [abslabs1, abslabs2];
+		IFMACRO(dimension, 2)
+		if (orient)
+		{
+			varf vPbabciss([u, v], [uu, vv]) 
+				= intN(Th,qft=qf1pTlump) ([u, v]'*[uu, vv]*1e-8/area)
+				+ intN1(Th,labs,qfe=qf1pElump) ([dx(u), dy(u)]'*[-N.y, +N.x]*uu
+						+ [dx(v),dy(v)]'*[-N.y,+N.x]*vv)
+				+ intN1(Th,labs,qfe=qf1pElump) ([orient, orient]'*[uu, vv]);
+			matrix Pbabciss = vPbabciss(Wh, Wh);
+			real[int] PbabcissRHS = vPbabciss(0, Wh);
+			abslabs1[] = Pbabciss^-1 * PbabcissRHS;
+		}
+		else [abslabs1, abslabs2] = [1., 1.]; /* no sorting */
+		real abslabsmax = 2*abslabs1[].max;
+		varf vlabsneg([unused1, unused2], [uu, vv])
+			= on(labs, unused1=abslabs1-abslabsmax, unused2=abslabs2-abslabsmax);
+		if(0) plot(abslabs1, wait=1);
+		ENDIFMACRO
+		IFMACRO(dimension, 3);
+		varf vlabsneg([unused1, unused2], [uu, vv])
+			= on(labs, unused1=-1, unused2=-1);
+		ENDIFMACRO
+		real[int] absc = vlabsneg(0, Wh);
+		doflabs.resize(Wh.ndof);
+		doflabs = 0:Wh.ndof-1;
+		sort(absc, doflabs);
+		absc = absc ? 1 : 0;
+		doflabs.resize(absc.sum+0.5);
+	}
+	else
+	{
+		meshN Th = Wh.Th;
+		fespace VhExtractDofsonBorder(Th, [P1, P1, P1]);
+		VhExtractDofsonBorder [abslabs1, abslabs2, abslabs3];
+		IFMACRO(dimension, 2)
+		if (orient)
+		{
+			varf vPbabciss([u, v, w], [uu, vv, ww]) 
+				= intN(Th,qft=qf1pTlump) ([u, v, w]'*[uu, vv, ww]*1e-8/area)
+				+ intN1(Th,labs,qfe=qf1pElump) ([dx(u), dy(u)]'*[-N.y, +N.x]*uu
+						+ [dx(v), dy(v)]'*[-N.y, +N.x]*vv
+						+ [dx(w), dy(w)]'*[-N.y, +N.x]*ww)
+				+ intN1(Th,labs,qfe=qf1pElump) ([orient, orient, orient]'*[uu, vv, ww]);
+			matrix Pbabciss = vPbabciss(Wh, Wh);
+			real[int] PbabcissRHS = vPbabciss(0, Wh);
+			abslabs1[] = Pbabciss^-1 * PbabcissRHS;
+		}
+		else [abslabs1, abslabs2, abslabs3] = [1., 1., 1.]; /* no sorting */
+		real abslabsmax = 2*abslabs1[].max;
+		varf vlabsneg([unused1, unused2, unused3], [uu, vv, pp])
+			= on(labs, unused1=abslabs1-abslabsmax, unused2=abslabs2-abslabsmax, unused3=abslabs3-abslabsmax);
+		if(0) plot(abslabs1, wait=1);
+		ENDIFMACRO
+		IFMACRO(dimension, 3);
+		varf vlabsneg([unused1, unused2, unused3], [uu, vv, pp])
+			= on(labs, unused1=-1, unused2=-1, unused3=-1);
+		ENDIFMACRO
+		real[int] absc = vlabsneg(0,Wh);
+		doflabs.resize(Wh.ndof);
+		doflabs = 0:Wh.ndof-1;
+		sort(absc, doflabs);
+		absc = absc ? 1 : 0;
+		doflabs.resize(absc.sum+0.5);
+	}
+}
+//

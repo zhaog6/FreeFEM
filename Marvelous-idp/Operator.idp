@@ -1,0 +1,35 @@
+//////////////////////////////////////////////////////////////////////////
+/**
+ * @ File Name: Operator.idp
+ * @ Author: Zhao Gang
+ * @ Mail: zhaog6@lsec.cc.ac.cn
+ * @ Created Time: 03/16/2019 Saturday 10:22:09
+ * @ Brief: 
+ */
+/////////////////////////////////////////////////////////////////////////
+
+// Support mathematical operators
+// DIM = 2
+IFMACRO(dimension, 2)
+macro grad(u) [dx(u), dy(u)] //
+macro Grad(u, v) [dx(u),dy(u), dx(v),dy(v)] //
+macro Ugradv(u1, u2, v) ( u1*dx(v) + u2*dy(v) ) //
+macro UgradV(u1, u2, v1, v2) [u1*dx(v1) + u2*dy(v1), u1*dx(v2) + u2*dy(v2)] //
+macro div(u, v) ( dx(u) + dy(v) ) //
+macro curl(u, v) ( dx(v) - dy(u) ) //
+macro Curl(u) [dy(u), -dx(u)] //
+macro lap(u) ( dxx(u) + dyy(u) ) //
+macro Lap(u, v) [dxx(u) + dyy(u), dxx(v) + dyy(v)] //
+ENDIFMACRO
+
+// DIM = 3
+IFMACRO(dimension, 3)
+macro grad(u) [dx(u), dy(u), dz(u)] //
+macro Grad(u, v, w) [dx(u),dy(u),dz(u), dx(v),dy(v),dz(v), dx(w),dy(w),dz(w)] //
+macro Ugradv(u1, u2, u3, v) ( u1*dx(v) + u2*dy(v) + u3*dz(v) ) //
+macro UgradV(u1, u2, u3, v1, v2, v3) [u1*dx(v1) + u2*dy(v1) + u3*dz(v1), u1*dx(v2) + u2*dy(v2) + u3*dz(v2), u1*dx(v3) + u2*dy(v3) + u3*dz(v3)] //
+macro div(u, v, w) ( dx(u) + dy(v) + dz(w) ) //
+macro curl(u, v, w) [dy(w) - dz(v), dz(u) - dx(w), dx(v) - dy(u)] //
+macro lap(u) ( dxx(u) + dyy(u) + dzz(u) ) //
+macro Lap(u, v, w) [dxx(u) + dyy(u) + dzz(u), dxx(v) + dyy(v) + dzz(v), dxx(w) + dyy(w) + dzz(w)] //
+ENDIFMACRO

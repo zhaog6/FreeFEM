@@ -1,0 +1,32 @@
+//////////////////////////////////////////////////////////////////////////
+/**
+ * @ File Name: RandomNumberGenerator.idp
+ * @ Author: Zhao Gang
+ * @ Mail: zhaog6@lsec.cc.ac.cn
+ * @ Created Time: 03/02/2019 Saturday 12:23:34
+ * @ Brief: 
+ */
+/////////////////////////////////////////////////////////////////////////
+
+macro RANDMAX() (2^31-1) //
+
+macro rand(minimum, maximum)
+( minimum + (maximum-(minimum))*randreal1() ) //
+
+macro gaussd(loc, mu, sigma)
+( 1./(sqrt(2*pi)*sigma) * exp(-(loc-mu)^2/(2*sigma^2)) ) //
+
+func real randn(real mu, real sigma, real minimum, real maximum)
+{
+	real xx, yy, dScope = 1;
+	while (dScope > yy)
+	{
+		xx = rand(minimum, maximum);
+		yy = gaussd(xx, mu, sigma);
+		dScope = rand(0., gaussd(mu, mu, sigma));
+	}
+	return xx;
+}
+
+int seed = 1e+6 * clock();
+randinit(seed);

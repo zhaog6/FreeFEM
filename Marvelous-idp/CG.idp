@@ -1,0 +1,60 @@
+//////////////////////////////////////////////////////////////////////////
+/**
+ * @ File Name: CG.idp
+ * @ Author: Zhao Gang
+ * @ Mail: zhaog6@lsec.cc.ac.cn
+ * @ Created Time: 12/19/2018 Wednesday 14:29:55
+ * @ Brief: 
+ */
+/////////////////////////////////////////////////////////////////////////
+
+func real[int] cg(matrix& A, real[int]& b, real[int]& solu, int maxitCG, real tolCG)
+{
+	real start = clock();
+	assert(A.n == A.m && A.m == b.n);
+    int n=A.n;
+	real[int] r(n), p(n), w(n);
+    r = A * solu;
+	r = b - r;
+	//cout<<"Initial error: "<<sqrt(r'*r)<<endl;
+	real rho1, beta, alpha, pTw, rho2 = r' * r;
+	p = r;
+	alpha = 0.0;
+	beta = 0.0;
+	pTw = 0.0;
+	for (int it = 0; it < maxitCG; ++it)
+	{
+		if (it > 0)
+		{
+			beta = rho2 / rho1;
+			//cout<<"alpha= "<<alpha<<endl;
+			beta = beta/alpha;
+			//cout<<"beta= "<<beta<<endl;
+			p = beta * p;
+			p += r;
+		}
+		w = A * p;
+		//cout<<"\|w\|_2= "<<sqrt(w'*w)<<endl;
+		pTw = p' * w;
+		//cout<<"after compute w, alpha= :" <<alpha<<endl;
+		alpha = rho2 / pTw;
+		p = alpha * p;
+		solu += p;
+		w = alpha * w;
+		r -= w;
+		rho1 = rho2;
+		rho2 = r' * r;
+		//cout << "CG: " << it+1 << "  the residual error: " << sqrt(rho2) <<endl;
+		if (sqrt(rho2) < tolCG)
+		{
+			/*
+			cout << "====================================================" << endl;
+			cout << "CG: Ellapsed time :: " << clock()-start << " s" << endl;
+			cout << "    Iterative step :: " << it+1 << endl;
+			cout << "====================================================" << endl;
+			*/
+			break;
+		}
+	}
+	return solu;	
+}

@@ -1,0 +1,44 @@
+/***********************************************************************
+	> File Name: multipoleExpand.idp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 2020/04/15 星期三 20时04分42秒
+ ***********************************************************************/
+
+func real multipoleExpand(real xx, real yy, real zz, real[int]& Xpp, real[int]& coeff, real divbyzerotol)
+{
+	real val = sqrt((xx - Xpp[0])^2 + (yy - Xpp[1])^2 + (zz - Xpp[2])^2);
+	val = (val > divbyzerotol) ? val : 1.;
+	real[int] expand = [1./val, //Scaler
+				(xx-Xpp[0])/val^3, (yy-Xpp[1])/val^3, (zz-Xpp[2])/val^3, //Vector
+				//Tensor
+				3*(xx - Xpp[0])^2/val^5 - 1./val^3, 6*(xx-Xpp[0])*(yy-Xpp[1])/val^5,  6*(xx-Xpp[0])*(zz-Xpp[2])/val^5, 
+													3*(yy-Xpp[1])^2/val^5 - 1./val^3, 6*(yy-Xpp[1])*(zz-Xpp[2])/val^5, 
+																					  3*(zz-Xpp[2])^2/val^5 - 1./val^3];
+	val = coeff' * expand;
+	return val;
+}
+
+NewMacro getCoefficient(ThNo, rhoeh, Xpp, coeff, nEV, qf)
+{
+	real[int] dXpp(dimension);
+	dXpp[0] = intN(ThNo, qfV=qf) (x * (rhoeh) / (2.*nEV));
+	dXpp[1] = intN(ThNo, qfV=qf) (y * (rhoeh) / (2.*nEV));
+	dXpp[2] = intN(ThNo, qfV=qf) (z * (rhoeh) / (2.*nEV));
+	mpiAllReduce(dXpp, Xpp, mpiCommWorld, mpiSUM);
+	real[int] dcoeff(10);
+	dcoeff[0] = 2. * nEV / mpisize;
+	dcoeff[1] = intN(ThNo, qfV=qf) ((rhoeh) * (x - Xpp[0]));
+	dcoeff[2] = intN(ThNo, qfV=qf) ((rhoeh) * (y - Xpp[1]));
+	dcoeff[3] = intN(ThNo, qfV=qf) ((rhoeh) * (z - Xpp[2]));
+	dcoeff[4] = intN(ThNo, qfV=qf) (1./2 * (rhoeh) * (x - Xpp[0])^2);
+	dcoeff[5] = intN(ThNo, qfV=qf) (1./2 * (rhoeh) * (x - Xpp[0]) * (y - Xpp[1]));
+	dcoeff[6] = intN(ThNo, qfV=qf) (1./2 * (rhoeh) * (x - Xpp[0]) * (z - Xpp[2]));
+	dcoeff[7] = intN(ThNo, qfV=qf) (1./2 * (rhoeh) * (y - Xpp[1])^2);
+	dcoeff[8] = intN(ThNo, qfV=qf) (1./2 * (rhoeh) * (y - Xpp[1]) * (z - Xpp[2]));
+	dcoeff[9] = intN(ThNo, qfV=qf) (1./2 * (rhoeh) * (z - Xpp[2])^2);
+	mpiAllReduce(dcoeff, coeff, mpiCommWorld, mpiSUM);
+}
+EndMacro
+
+//#EndFile

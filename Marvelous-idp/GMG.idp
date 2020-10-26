@@ -1,0 +1,80 @@
+//////////////////////////////////////////////////////////////////////////
+/**
+ * @ File Name: GMG.idp
+ * @ Author: Zhao Gang
+ * @ Mail: zhaog6@lsec.cc.ac.cn
+ * @ Created Time: 12/22/2018 Saturday 15:47:28
+ * @ Brief: 
+ */
+/////////////////////////////////////////////////////////////////////////
+
+include "CG.idp"
+
+func real[int] GMG(matrix& A, real[int]& b, real[int]& u0, int nblayers, int maxitMG, real tolMG)
+{
+	real start = clock();
+	int maxitCG = 3;
+	real tolCG = 1e-8;
+	real[int] r0 = A * u0;
+	r0 = b - r0;
+	for (int it = 0; it < maxitMG; ++it)
+	{
+		real[int] ec(dof.sum), rc(dof.sum), r(b.n);
+		// 如主程序中所提，我们定义了长向量(ec和rc)，目的是把所有层的ec(误差)和rc(右端项)
+		// 分别组成两个长向量。而定义pointer的目的是为了指出长向量ec或rc中哪一块是l层上的误差，
+		// 哪一块是l+1层上的误差。为写下面多层网格的通式作准备。
+		int first = pointer[0], second = pointer[1], third = pointer[2];
+		ec(first:second-1) = u0;
+		rc(first:second-1) = b;
+		for (int l = 1; l < nblayers; ++l)
+		{
+			first = pointer[l-1];
+			second = pointer[l];
+			third = pointer[l+1];
+			// Pre - smoothing
+			ec(first:second-1) = cg(Ac[l-1], rc(first:second-1), ec(first:second-1), maxitCG, tolCG);
+			r.resize(Ac[l-1].n);
+			r = Ac[l-1] * ec(first:second-1);
+			r = rc(first:second-1) - r;
+			// 将残量限制到粗空间
+			rc(second:third-1) = Prol[nblayers-l-1]' * r;
+			// 如果l != nblayers-1，回到for循环的头一句，寻求下一层(更粗层)的残量方程
+			if (l != nblayers-1)
+			{
+				continue;
+			}
+			else
+			{
+				// 如果l == nblayers-1，直接求出精确解(在最粗的空间上)
+				set(Ac[l], solver=UMFPACK);
+				ec(second:third-1) = Ac[l]^-1 * rc(second:third-1);
+				for (int k = l; k > 0; --k)
+				{
+					// 求出最粗空间上残量方程的精确解后，进行延拓校正以修正较细空间上残量方程的解
+					first = pointer[k-1];
+					second = pointer[k];
+					third = pointer[k+1];
+					r.resize(Prol[nblayers-k-1].n);
+					r = Prol[nblayers-k-1] * ec(second:third-1);
+					ec(first:second-1) += r;
+					// Post - smoothing
+					ec(first:second-1) = cg(Ac[k-1], rc(first:second-1), ec(first:second-1), maxitCG, tolCG);
+				}
+			}
+		}
+		u0 = ec(first:second-1);
+		real[int] r1 = A * u0;
+		r1 = b - r1;
+		real error = r1.l2;
+		error /= r0.l2;
+		if (error < tolMG)
+		{
+			cout << "=================================================" << endl;
+			cout << "GMG: Elapsed time :: " << clock()-start << " s" << endl;
+			cout << "     Iterative step :: " << it+1 << endl;
+			cout << "=================================================" << endl;
+			break;
+		}
+	}
+	return u0;
+}
