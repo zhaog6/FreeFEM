@@ -1,0 +1,96 @@
+/***********************************************************************
+	> File Name: stokes-3d-PETSc.edp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 10/16/2020 Friday 08:40:38 AM
+ ***********************************************************************/
+
+macro dimension() 3 //
+
+load "PETSc"
+
+include "macro_ddm.idp"
+include "Operator.idp"
+include "getARGV.idp"
+
+macro def(u) [u, u#B, u#C, u#D] //
+macro init(u) [u, u, u, u] //
+
+macro fe [P2, P2, P2, P1] //
+
+real start = mpiWtime();
+
+//-----------------
+//   Parameters
+//-----------------
+int nn = getARGV("-nn", 16);
+int[int] labs = 1 : 5;
+int refi = getARGV("-refi", 0);
+real Re = getARGV("-Re", 100.);
+real nu = 1./Re;
+real gamma = getARGV("-gamma", 0.3);
+
+//--------------------
+//   Building Mesh
+//--------------------
+meshN Th = cube(nn, nn, nn);
+fespace Ph(Th, P0);
+Ph part;
+if (mpirank == 0) partitionerSeq(part[], Th, mpisize);
+partitionerPar(part[], Th, mpiCommWorld, mpisize);
+meshN ThNo = trunc(Th, abs(part-mpirank)<1e-1, split=2^refi, label=-111111, renum=1);
+Th = ThNo;
+reconstructDmesh(Th);
+int dNT = ThNo.nt;
+int NT;
+mpiAllReduce(dNT, NT, mpiCommWorld, mpiSUM);
+
+//---------------------------
+//   Building FE-Space
+//---------------------------
+fespace Vh(Th, fe);
+Vh [uh, vh, wh, ph];
+
+//--------------------------------
+//   Defining Variational Form
+//--------------------------------
+varf vA([u, v, w, p], [uu, vv, ww, pp]) 
+	= intN(Th) ( nu * Grad(u, v, w)' * Grad(uu, vv, ww)
+			- p * div(uu, vv, ww) + div(u, v, w) * pp )
+			//+ gamma * div(u, v, w) * div(uu, vv, ww) )
+	+ on(6, u=1, v=0, w=0) + on(labs, u=0, v=0, w=0);
+
+//---------------------------
+//   Solving Equations	
+//---------------------------
+Mat dA;
+createMat(Th, dA, fe);
+dA = vA(Vh, Vh, tgv=-1);
+real[int] rhs = vA(0, Vh, tgv=-1);
+Vh def(list) = [1, 1, 1, 2];
+string[int] names(2);
+names[0] = "velocity";
+names[1] = "pressure";
+set(dA, sparams="-pc_type fieldsplit -pc_fieldsplit_type schur -pc_fieldsplit_schur_fact_type full " + "-prefix_push fieldsplit_velocity_ -pc_type gamg -pc_gamg_sym_graph -ksp_rtol 1e-1 -prefix_pop " + "-prefix_push fieldsplit_pressure_ -pc_type lsc -ksp_type cg -ksp_max_it 5 -prefix_pop " + "-ksp_type fgmres -ksp_rtol 1e-8 -ksp_converged_reason", fields=list[], names=names);
+verbosity = 1;
+uh[] = dA^-1 * rhs;
+verbosity = 0;
+
+//-----------------------------
+//   Computing Summary
+//-----------------------------
+real[int] puh;
+ChangeNumbering(dA, uh[], puh);
+int dndofs = puh.n;
+int ndofs;
+mpiAllReduce(dndofs, ndofs, mpiCommWorld, mpiSUM);
+if (mpirank == 0)
+{
+	cout << "---------------------------------" << endl;
+	cout << "# of Elements: " << NT << endl;
+	cout << "# of Dofs: " << ndofs << endl;
+	cout << "---------------------------------" << endl;
+	cout << "ttttttttttttttttttttttttttttttttttttttttttttt" << endl;
+	cout << "Elapsed time is " << mpiWtime()-start << " s" << endl;
+	cout << "ttttttttttttttttttttttttttttttttttttttttttttt" << endl;
+}

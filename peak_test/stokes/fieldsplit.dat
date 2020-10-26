@@ -1,0 +1,944 @@
+Sender: LSF System <lsfadmin@c6u10n01>
+Subject: Job 285687: <mywork> in cluster <hpc.lsec.cc.ac.cn> Done
+
+Job <mywork> was submitted from host <ln02> by user <zhaogang> in cluster <hpc.lsec.cc.ac.cn>.
+Job was executed on host(s) <36*c6u10n01>, in queue <batch>, as user <zhaogang> in cluster <hpc.lsec.cc.ac.cn>.
+                            <36*c6u15n03>
+                            <36*a6u26n02>
+                            <36*c6u08n01>
+                            <36*c1u03n04>
+                            <36*c2u22n01>
+                            <36*c6u01n01>
+                            <36*c1u24n02>
+                            <36*c1u24n03>
+                            <36*a6u01n03>
+                            <36*c1u01n02>
+                            <36*c1u01n04>
+                            <36*c2u08n02>
+                            <36*c2u08n03>
+                            <36*a6u12n03>
+                            <36*c3u22n01>
+                            <36*c1u12n02>
+                            <36*c3u22n02>
+                            <36*c1u12n03>
+                            <36*a6u17n02>
+                            <36*a6u17n04>
+                            <36*c2u19n04>
+                            <36*c1u17n01>
+                            <36*c1u17n02>
+                            <36*c6u22n02>
+                            <36*c4u03n03>
+                            <36*c2u05n02>
+                            <36*c3u05n02>
+                            <36*c2u22n03>
+                            <36*c1u12n04>
+                            <36*c6u24n02>
+                            <36*c3u12n04>
+</share/home/zhaogang> was used as the home directory.
+</share/home/zhaogang/zg/FreeFEM/Labs/peak_test/stokes> was used as the working directory.
+Started at Wed Oct 21 20:20:16 2020
+Results reported on Wed Oct 21 20:38:59 2020
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+mpiexec.hydra -genvall /share/home/zhaogang/zg/FreeFEM/New_Version/FreeFem-sources/src/mpi/FreeFem++-mpi stokes-3d-PETSc.edp -v 0 -nn 10 -refi 4 -ksp_view -ksp_monitor_true_residual -log_view
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   1270389.00 sec.
+    Max Memory :                                 1555274 MB
+    Average Memory :                             777327.25 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Processes :                              1184
+    Max Threads :                                2336
+
+The output (if any) follows:
+
+Petsc Release Version 3.13.5, Sep 01, 2020 
+       The PETSc Team
+    petsc-maint@mcs.anl.gov
+ https://www.mcs.anl.gov/petsc/
+See docs/changes/index.html for recent updates.
+See docs/faq.html for problems.
+See docs/manualpages/index.html for help. 
+Libraries linked from /share/home/zhaogang/zg/FreeFEM/New_Version/ff-petsc/r/lib
+----------------------------------------
+  0 KSP unpreconditioned resid norm 3.190000000000e+02 true resid norm 3.190000000000e+02 ||r(i)||/||b|| 1.000000000000e+00
+  1 KSP unpreconditioned resid norm 1.055868931355e+01 true resid norm 1.055868931355e+01 ||r(i)||/||b|| 3.309933954091e-02
+  2 KSP unpreconditioned resid norm 8.338555259665e-02 true resid norm 8.338555259665e-02 ||r(i)||/||b|| 2.613967166039e-04
+  3 KSP unpreconditioned resid norm 2.807488693899e-03 true resid norm 2.807488693899e-03 ||r(i)||/||b|| 8.800904996548e-06
+  4 KSP unpreconditioned resid norm 1.669777012642e-03 true resid norm 1.669777012630e-03 ||r(i)||/||b|| 5.234410697900e-06
+  5 KSP unpreconditioned resid norm 9.415751445067e-04 true resid norm 9.415751445064e-04 ||r(i)||/||b|| 2.951646221023e-06
+  6 KSP unpreconditioned resid norm 6.300902026904e-04 true resid norm 6.300902026931e-04 ||r(i)||/||b|| 1.975204397157e-06
+  7 KSP unpreconditioned resid norm 3.371405721470e-04 true resid norm 3.371405721487e-04 ||r(i)||/||b|| 1.056866997331e-06
+  8 KSP unpreconditioned resid norm 2.854243041217e-04 true resid norm 2.854243041349e-04 ||r(i)||/||b|| 8.947470349057e-07
+  9 KSP unpreconditioned resid norm 2.850856639980e-04 true resid norm 2.850856640113e-04 ||r(i)||/||b|| 8.936854671200e-07
+ 10 KSP unpreconditioned resid norm 2.724681023935e-04 true resid norm 2.724681024125e-04 ||r(i)||/||b|| 8.541319824843e-07
+ 11 KSP unpreconditioned resid norm 2.416769219766e-04 true resid norm 2.416769220105e-04 ||r(i)||/||b|| 7.576079059890e-07
+ 12 KSP unpreconditioned resid norm 2.108157979313e-04 true resid norm 2.108157979865e-04 ||r(i)||/||b|| 6.608645704905e-07
+ 13 KSP unpreconditioned resid norm 1.989177419168e-04 true resid norm 1.989177419732e-04 ||r(i)||/||b|| 6.235665892576e-07
+ 14 KSP unpreconditioned resid norm 1.657380460147e-04 true resid norm 1.657380460494e-04 ||r(i)||/||b|| 5.195550032896e-07
+ 15 KSP unpreconditioned resid norm 1.295182069775e-04 true resid norm 1.295182070376e-04 ||r(i)||/||b|| 4.060131882057e-07
+ 16 KSP unpreconditioned resid norm 1.294666651287e-04 true resid norm 1.294666651879e-04 ||r(i)||/||b|| 4.058516150090e-07
+ 17 KSP unpreconditioned resid norm 1.207126201283e-04 true resid norm 1.207126200928e-04 ||r(i)||/||b|| 3.784094673757e-07
+ 18 KSP unpreconditioned resid norm 1.136928344030e-04 true resid norm 1.136928342755e-04 ||r(i)||/||b|| 3.564038692022e-07
+ 19 KSP unpreconditioned resid norm 9.302030807372e-05 true resid norm 9.302030778749e-05 ||r(i)||/||b|| 2.915997109326e-07
+ 20 KSP unpreconditioned resid norm 8.094996319694e-05 true resid norm 8.094996281744e-05 ||r(i)||/||b|| 2.537616389261e-07
+ 21 KSP unpreconditioned resid norm 6.810870115645e-05 true resid norm 6.810870063486e-05 ||r(i)||/||b|| 2.135068985419e-07
+ 22 KSP unpreconditioned resid norm 5.763402565059e-05 true resid norm 5.763402504060e-05 ||r(i)||/||b|| 1.806709248922e-07
+ 23 KSP unpreconditioned resid norm 4.635435283501e-05 true resid norm 4.635435227426e-05 ||r(i)||/||b|| 1.453114491356e-07
+ 24 KSP unpreconditioned resid norm 4.089198891734e-05 true resid norm 4.089198847422e-05 ||r(i)||/||b|| 1.281880516433e-07
+ 25 KSP unpreconditioned resid norm 3.634590665555e-05 true resid norm 3.634590621740e-05 ||r(i)||/||b|| 1.139370100859e-07
+ 26 KSP unpreconditioned resid norm 2.619083719052e-05 true resid norm 2.619083659787e-05 ||r(i)||/||b|| 8.210293604347e-08
+ 27 KSP unpreconditioned resid norm 2.180257611362e-05 true resid norm 2.180257563753e-05 ||r(i)||/||b|| 6.834663209258e-08
+ 28 KSP unpreconditioned resid norm 1.891883320216e-05 true resid norm 1.891883263645e-05 ||r(i)||/||b|| 5.930668538073e-08
+ 29 KSP unpreconditioned resid norm 1.630974891329e-05 true resid norm 1.630974816837e-05 ||r(i)||/||b|| 5.112773720492e-08
+ 30 KSP unpreconditioned resid norm 1.421846941494e-05 true resid norm 1.421846941494e-05 ||r(i)||/||b|| 4.457200443556e-08
+ 31 KSP unpreconditioned resid norm 1.382042007556e-05 true resid norm 1.382042007551e-05 ||r(i)||/||b|| 4.332420086366e-08
+ 32 KSP unpreconditioned resid norm 1.246646274511e-05 true resid norm 1.246646274508e-05 ||r(i)||/||b|| 3.907982051750e-08
+ 33 KSP unpreconditioned resid norm 1.039521535560e-05 true resid norm 1.039521535560e-05 ||r(i)||/||b|| 3.258688199246e-08
+ 34 KSP unpreconditioned resid norm 9.375440106959e-06 true resid norm 9.375440106960e-06 ||r(i)||/||b|| 2.939009437918e-08
+ 35 KSP unpreconditioned resid norm 8.191771705752e-06 true resid norm 8.191771705752e-06 ||r(i)||/||b|| 2.567953512775e-08
+ 36 KSP unpreconditioned resid norm 6.311930121644e-06 true resid norm 6.311930121650e-06 ||r(i)||/||b|| 1.978661480141e-08
+ 37 KSP unpreconditioned resid norm 5.753600261904e-06 true resid norm 5.753600261864e-06 ||r(i)||/||b|| 1.803636445725e-08
+ 38 KSP unpreconditioned resid norm 5.317229667785e-06 true resid norm 5.317229667729e-06 ||r(i)||/||b|| 1.666843156028e-08
+ 39 KSP unpreconditioned resid norm 3.624417132042e-06 true resid norm 3.624417132038e-06 ||r(i)||/||b|| 1.136180919134e-08
+ 40 KSP unpreconditioned resid norm 3.356476563744e-06 true resid norm 3.356476563733e-06 ||r(i)||/||b|| 1.052187010575e-08
+ 41 KSP unpreconditioned resid norm 2.790239816631e-06 true resid norm 2.790239816672e-06 ||r(i)||/||b|| 8.746833281103e-09
+Linear solve converged due to CONVERGED_RTOL iterations 41
+KSP Object: 1152 MPI processes
+  type: fgmres
+    restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+    happy breakdown tolerance 1e-30
+  maximum iterations=10000, initial guess is zero
+  tolerances:  relative=1e-08, absolute=1e-50, divergence=10000.
+  right preconditioning
+  using UNPRECONDITIONED norm type for convergence test
+PC Object: 1152 MPI processes
+  type: fieldsplit
+    FieldSplit with Schur preconditioner, factorization FULL
+    Preconditioner for the Schur complement formed from A11
+    Split info:
+    Split number 0 Defined by IS
+    Split number 1 Defined by IS
+    KSP solver for A00 block
+      KSP Object: (fieldsplit_velocity_) 1152 MPI processes
+        type: gmres
+          restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+          happy breakdown tolerance 1e-30
+        maximum iterations=10000, initial guess is zero
+        tolerances:  relative=0.1, absolute=1e-50, divergence=10000.
+        left preconditioning
+        using PRECONDITIONED norm type for convergence test
+      PC Object: (fieldsplit_velocity_) 1152 MPI processes
+        type: gamg
+          type is MULTIPLICATIVE, levels=5 cycles=v
+            Cycles per PCApply=1
+            Using externally compute Galerkin coarse grid matrices
+            GAMG specific options
+              Threshold for dropping small values in graph on each level =         0.         0.         0.        
+              Threshold scaling factor for each level not specified = 1.
+              AGG specific options
+                Symmetric graph true
+                Number of levels to square graph 1
+                Number smoothing steps 1
+              Complexity:    grid = 1.04043
+        Coarse grid solver -- level -------------------------------
+          KSP Object: (fieldsplit_velocity_mg_coarse_) 1152 MPI processes
+            type: preonly
+            maximum iterations=10000, initial guess is zero
+            tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+            left preconditioning
+            using NONE norm type for convergence test
+          PC Object: (fieldsplit_velocity_mg_coarse_) 1152 MPI processes
+            type: bjacobi
+              number of blocks = 1152
+              Local solve is same for all blocks, in the following KSP and PC objects:
+            KSP Object: (fieldsplit_velocity_mg_coarse_sub_) 1 MPI processes
+              type: preonly
+              maximum iterations=1, initial guess is zero
+              tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+              left preconditioning
+              using NONE norm type for convergence test
+            PC Object: (fieldsplit_velocity_mg_coarse_sub_) 1 MPI processes
+              type: lu
+                out-of-place factorization
+                tolerance for zero pivot 2.22045e-14
+                using diagonal shift on blocks to prevent zero pivot [INBLOCKS]
+                matrix ordering: nd
+                factor fill ratio given 5., needed 1.
+                  Factored matrix follows:
+                    Mat Object: 1 MPI processes
+                      type: seqaij
+                      rows=26, cols=26
+                      package used to perform factorization: petsc
+                      total: nonzeros=676, allocated nonzeros=676
+                      total number of mallocs used during MatSetValues calls=0
+                        using I-node routines: found 6 nodes, limit used is 5
+              linear system matrix = precond matrix:
+              Mat Object: 1 MPI processes
+                type: seqaij
+                rows=26, cols=26
+                total: nonzeros=676, allocated nonzeros=676
+                total number of mallocs used during MatSetValues calls=0
+                  using I-node routines: found 6 nodes, limit used is 5
+            linear system matrix = precond matrix:
+            Mat Object: 1152 MPI processes
+              type: mpiaij
+              rows=26, cols=26
+              total: nonzeros=676, allocated nonzeros=676
+              total number of mallocs used during MatSetValues calls=0
+                using I-node (on process 0) routines: found 6 nodes, limit used is 5
+        Down solver (pre-smoother) on level 1 -------------------------------
+          KSP Object: (fieldsplit_velocity_mg_levels_1_) 1152 MPI processes
+            type: chebyshev
+              eigenvalue estimates used:  min = 0.136621, max = 1.50284
+              eigenvalues estimate via gmres min 0.33947, max 1.36621
+              eigenvalues estimated using gmres with translations  [0. 0.1; 0. 1.1]
+              KSP Object: (fieldsplit_velocity_mg_levels_1_esteig_) 1152 MPI processes
+                type: gmres
+                  restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                  happy breakdown tolerance 1e-30
+                maximum iterations=10, initial guess is zero
+                tolerances:  relative=1e-12, absolute=1e-50, divergence=10000.
+                left preconditioning
+                using PRECONDITIONED norm type for convergence test
+              estimating eigenvalues using noisy right hand side
+            maximum iterations=2, nonzero initial guess
+            tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+            left preconditioning
+            using NONE norm type for convergence test
+          PC Object: (fieldsplit_velocity_mg_levels_1_) 1152 MPI processes
+            type: sor
+              type = local_symmetric, iterations = 1, local iterations = 1, omega = 1.
+            linear system matrix = precond matrix:
+            Mat Object: 1152 MPI processes
+              type: mpiaij
+              rows=1167, cols=1167
+              total: nonzeros=481339, allocated nonzeros=481339
+              total number of mallocs used during MatSetValues calls=0
+                not using I-node (on process 0) routines
+        Up solver (post-smoother) same as down solver (pre-smoother)
+        Down solver (pre-smoother) on level 2 -------------------------------
+          KSP Object: (fieldsplit_velocity_mg_levels_2_) 1152 MPI processes
+            type: chebyshev
+              eigenvalue estimates used:  min = 0.171716, max = 1.88887
+              eigenvalues estimate via gmres min 0.0537453, max 1.71716
+              eigenvalues estimated using gmres with translations  [0. 0.1; 0. 1.1]
+              KSP Object: (fieldsplit_velocity_mg_levels_2_esteig_) 1152 MPI processes
+                type: gmres
+                  restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                  happy breakdown tolerance 1e-30
+                maximum iterations=10, initial guess is zero
+                tolerances:  relative=1e-12, absolute=1e-50, divergence=10000.
+                left preconditioning
+                using PRECONDITIONED norm type for convergence test
+              estimating eigenvalues using noisy right hand side
+            maximum iterations=2, nonzero initial guess
+            tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+            left preconditioning
+            using NONE norm type for convergence test
+          PC Object: (fieldsplit_velocity_mg_levels_2_) 1152 MPI processes
+            type: sor
+              type = local_symmetric, iterations = 1, local iterations = 1, omega = 1.
+            linear system matrix = precond matrix:
+            Mat Object: 1152 MPI processes
+              type: mpiaij
+              rows=52935, cols=52935
+              total: nonzeros=30366603, allocated nonzeros=30366603
+              total number of mallocs used during MatSetValues calls=0
+                using nonscalable MatPtAP() implementation
+                using I-node (on process 0) routines: found 7 nodes, limit used is 5
+        Up solver (post-smoother) same as down solver (pre-smoother)
+        Down solver (pre-smoother) on level 3 -------------------------------
+          KSP Object: (fieldsplit_velocity_mg_levels_3_) 1152 MPI processes
+            type: chebyshev
+              eigenvalue estimates used:  min = 0.143735, max = 1.58108
+              eigenvalues estimate via gmres min 0.0383695, max 1.43735
+              eigenvalues estimated using gmres with translations  [0. 0.1; 0. 1.1]
+              KSP Object: (fieldsplit_velocity_mg_levels_3_esteig_) 1152 MPI processes
+                type: gmres
+                  restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                  happy breakdown tolerance 1e-30
+                maximum iterations=10, initial guess is zero
+                tolerances:  relative=1e-12, absolute=1e-50, divergence=10000.
+                left preconditioning
+                using PRECONDITIONED norm type for convergence test
+              estimating eigenvalues using noisy right hand side
+            maximum iterations=2, nonzero initial guess
+            tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+            left preconditioning
+            using NONE norm type for convergence test
+          PC Object: (fieldsplit_velocity_mg_levels_3_) 1152 MPI processes
+            type: sor
+              type = local_symmetric, iterations = 1, local iterations = 1, omega = 1.
+            linear system matrix = precond matrix:
+            Mat Object: 1152 MPI processes
+              type: mpiaij
+              rows=1380196, cols=1380196
+              total: nonzeros=313195750, allocated nonzeros=313195750
+              total number of mallocs used during MatSetValues calls=0
+                using nonscalable MatPtAP() implementation
+                not using I-node (on process 0) routines
+        Up solver (post-smoother) same as down solver (pre-smoother)
+        Down solver (pre-smoother) on level 4 -------------------------------
+          KSP Object: (fieldsplit_velocity_mg_levels_4_) 1152 MPI processes
+            type: chebyshev
+              eigenvalue estimates used:  min = 0.172195, max = 1.89415
+              eigenvalues estimate via gmres min 0.0362669, max 1.72195
+              eigenvalues estimated using gmres with translations  [0. 0.1; 0. 1.1]
+              KSP Object: (fieldsplit_velocity_mg_levels_4_esteig_) 1152 MPI processes
+                type: gmres
+                  restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                  happy breakdown tolerance 1e-30
+                maximum iterations=10, initial guess is zero
+                tolerances:  relative=1e-12, absolute=1e-50, divergence=10000.
+                left preconditioning
+                using PRECONDITIONED norm type for convergence test
+              estimating eigenvalues using noisy right hand side
+            maximum iterations=2, nonzero initial guess
+            tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+            left preconditioning
+            using NONE norm type for convergence test
+          PC Object: (fieldsplit_velocity_mg_levels_4_) 1152 MPI processes
+            type: sor
+              type = local_symmetric, iterations = 1, local iterations = 1, omega = 1.
+            linear system matrix = precond matrix:
+            Mat Object: (fieldsplit_velocity_) 1152 MPI processes
+              type: mpiaij
+              rows=99228483, cols=99228483
+              total: nonzeros=8510549769, allocated nonzeros=8510549769
+              total number of mallocs used during MatSetValues calls=0
+                using I-node (on process 0) routines: found 23361 nodes, limit used is 5
+        Up solver (post-smoother) same as down solver (pre-smoother)
+        linear system matrix = precond matrix:
+        Mat Object: (fieldsplit_velocity_) 1152 MPI processes
+          type: mpiaij
+          rows=99228483, cols=99228483
+          total: nonzeros=8510549769, allocated nonzeros=8510549769
+          total number of mallocs used during MatSetValues calls=0
+            using I-node (on process 0) routines: found 23361 nodes, limit used is 5
+    KSP solver for S = A11 - A10 inv(A00) A01 
+      KSP Object: (fieldsplit_pressure_) 1152 MPI processes
+        type: cg
+        maximum iterations=5, initial guess is zero
+        tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+        left preconditioning
+        using PRECONDITIONED norm type for convergence test
+      PC Object: (fieldsplit_pressure_) 1152 MPI processes
+        type: lsc
+          KSP Object: (fieldsplit_pressure_lsc_) 1152 MPI processes
+            type: preonly
+            maximum iterations=10000, initial guess is zero
+            tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+            left preconditioning
+            using NONE norm type for convergence test
+          PC Object: (fieldsplit_pressure_lsc_) 1152 MPI processes
+            type: gamg
+              type is MULTIPLICATIVE, levels=4 cycles=v
+                Cycles per PCApply=1
+                Using externally compute Galerkin coarse grid matrices
+                GAMG specific options
+                  Threshold for dropping small values in graph on each level =             0.             0.            
+                  Threshold scaling factor for each level not specified = 1.
+                  AGG specific options
+                    Symmetric graph false
+                    Number of levels to square graph 1
+                    Number smoothing steps 1
+                  Complexity:    grid = 1.00796
+            Coarse grid solver -- level -------------------------------
+              KSP Object: (fieldsplit_pressure_lsc_mg_coarse_) 1152 MPI processes
+                type: preonly
+                maximum iterations=10000, initial guess is zero
+                tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+                left preconditioning
+                using NONE norm type for convergence test
+              PC Object: (fieldsplit_pressure_lsc_mg_coarse_) 1152 MPI processes
+                type: bjacobi
+                  number of blocks = 1152
+                  Local solve is same for all blocks, in the following KSP and PC objects:
+                KSP Object: (fieldsplit_pressure_lsc_mg_coarse_sub_) 1 MPI processes
+                  type: preonly
+                  maximum iterations=1, initial guess is zero
+                  tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+                  left preconditioning
+                  using NONE norm type for convergence test
+                PC Object: (fieldsplit_pressure_lsc_mg_coarse_sub_) 1 MPI processes
+                  type: lu
+                    out-of-place factorization
+                    tolerance for zero pivot 2.22045e-14
+                    using diagonal shift on blocks to prevent zero pivot [INBLOCKS]
+                    matrix ordering: nd
+                    factor fill ratio given 5., needed 1.0479
+                      Factored matrix follows:
+                        Mat Object: 1 MPI processes
+                          type: seqaij
+                          rows=38, cols=38
+                          package used to perform factorization: petsc
+                          total: nonzeros=1400, allocated nonzeros=1400
+                          total number of mallocs used during MatSetValues calls=0
+                            using I-node routines: found 19 nodes, limit used is 5
+                  linear system matrix = precond matrix:
+                  Mat Object: 1 MPI processes
+                    type: seqaij
+                    rows=38, cols=38
+                    total: nonzeros=1336, allocated nonzeros=1336
+                    total number of mallocs used during MatSetValues calls=0
+                      not using I-node routines
+                linear system matrix = precond matrix:
+                Mat Object: 1152 MPI processes
+                  type: mpiaij
+                  rows=38, cols=38
+                  total: nonzeros=1336, allocated nonzeros=1336
+                  total number of mallocs used during MatSetValues calls=0
+                    not using I-node (on process 0) routines
+            Down solver (pre-smoother) on level 1 -------------------------------
+              KSP Object: (fieldsplit_pressure_lsc_mg_levels_1_) 1152 MPI processes
+                type: chebyshev
+                  eigenvalue estimates used:  min = 0.159117, max = 1.75028
+                  eigenvalues estimate via gmres min 0.00636392, max 1.59117
+                  eigenvalues estimated using gmres with translations  [0. 0.1; 0. 1.1]
+                  KSP Object: (fieldsplit_pressure_lsc_mg_levels_1_esteig_) 1152 MPI processes
+                    type: gmres
+                      restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                      happy breakdown tolerance 1e-30
+                    maximum iterations=10, initial guess is zero
+                    tolerances:  relative=1e-12, absolute=1e-50, divergence=10000.
+                    left preconditioning
+                    using PRECONDITIONED norm type for convergence test
+                  estimating eigenvalues using noisy right hand side
+                maximum iterations=2, nonzero initial guess
+                tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+                left preconditioning
+                using NONE norm type for convergence test
+              PC Object: (fieldsplit_pressure_lsc_mg_levels_1_) 1152 MPI processes
+                type: sor
+                  type = local_symmetric, iterations = 1, local iterations = 1, omega = 1.
+                linear system matrix = precond matrix:
+                Mat Object: 1152 MPI processes
+                  type: mpiaij
+                  rows=1455, cols=1455
+                  total: nonzeros=175397, allocated nonzeros=175397
+                  total number of mallocs used during MatSetValues calls=0
+                    using I-node (on process 0) routines: found 6 nodes, limit used is 5
+            Up solver (post-smoother) same as down solver (pre-smoother)
+            Down solver (pre-smoother) on level 2 -------------------------------
+              KSP Object: (fieldsplit_pressure_lsc_mg_levels_2_) 1152 MPI processes
+                type: chebyshev
+                  eigenvalue estimates used:  min = 0.147316, max = 1.62047
+                  eigenvalues estimate via gmres min 0.0245695, max 1.47316
+                  eigenvalues estimated using gmres with translations  [0. 0.1; 0. 1.1]
+                  KSP Object: (fieldsplit_pressure_lsc_mg_levels_2_esteig_) 1152 MPI processes
+                    type: gmres
+                      restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                      happy breakdown tolerance 1e-30
+                    maximum iterations=10, initial guess is zero
+                    tolerances:  relative=1e-12, absolute=1e-50, divergence=10000.
+                    left preconditioning
+                    using PRECONDITIONED norm type for convergence test
+                  estimating eigenvalues using noisy right hand side
+                maximum iterations=2, nonzero initial guess
+                tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+                left preconditioning
+                using NONE norm type for convergence test
+              PC Object: (fieldsplit_pressure_lsc_mg_levels_2_) 1152 MPI processes
+                type: sor
+                  type = local_symmetric, iterations = 1, local iterations = 1, omega = 1.
+                linear system matrix = precond matrix:
+                Mat Object: 1152 MPI processes
+                  type: mpiaij
+                  rows=32545, cols=32545
+                  total: nonzeros=1961461, allocated nonzeros=1961461
+                  total number of mallocs used during MatSetValues calls=0
+                    using I-node (on process 0) routines: found 12 nodes, limit used is 5
+            Up solver (post-smoother) same as down solver (pre-smoother)
+            Down solver (pre-smoother) on level 3 -------------------------------
+              KSP Object: (fieldsplit_pressure_lsc_mg_levels_3_) 1152 MPI processes
+                type: chebyshev
+                  eigenvalue estimates used:  min = 0.15162, max = 1.66782
+                  eigenvalues estimate via gmres min 0.0309692, max 1.5162
+                  eigenvalues estimated using gmres with translations  [0. 0.1; 0. 1.1]
+                  KSP Object: (fieldsplit_pressure_lsc_mg_levels_3_esteig_) 1152 MPI processes
+                    type: gmres
+                      restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                      happy breakdown tolerance 1e-30
+                    maximum iterations=10, initial guess is zero
+                    tolerances:  relative=1e-12, absolute=1e-50, divergence=10000.
+                    left preconditioning
+                    using PRECONDITIONED norm type for convergence test
+                  estimating eigenvalues using noisy right hand side
+                maximum iterations=2, nonzero initial guess
+                tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+                left preconditioning
+                using NONE norm type for convergence test
+              PC Object: (fieldsplit_pressure_lsc_mg_levels_3_) 1152 MPI processes
+                type: sor
+                  type = local_symmetric, iterations = 1, local iterations = 1, omega = 1.
+                linear system matrix = precond matrix:
+                Mat Object: 1152 MPI processes
+                  type: mpiaij
+                  rows=4173281, cols=4173281
+                  total: nonzeros=268755319, allocated nonzeros=268755319
+                  total number of mallocs used during MatSetValues calls=0
+                    not using I-node (on process 0) routines
+            Up solver (post-smoother) same as down solver (pre-smoother)
+            linear system matrix = precond matrix:
+            Mat Object: 1152 MPI processes
+              type: mpiaij
+              rows=4173281, cols=4173281
+              total: nonzeros=268755319, allocated nonzeros=268755319
+              total number of mallocs used during MatSetValues calls=0
+                not using I-node (on process 0) routines
+        linear system matrix followed by preconditioner matrix:
+        Mat Object: (fieldsplit_pressure_) 1152 MPI processes
+          type: schurcomplement
+          rows=4173281, cols=4173281
+            Schur complement A11 - A10 inv(A00) A01
+            A11
+              Mat Object: (fieldsplit_pressure_) 1152 MPI processes
+                type: mpiaij
+                rows=4173281, cols=4173281
+                total: nonzeros=61979041, allocated nonzeros=61979041
+                total number of mallocs used during MatSetValues calls=0
+                  not using I-node (on process 0) routines
+            A10
+              Mat Object: 1152 MPI processes
+                type: mpiaij
+                rows=4173281, cols=99228483
+                total: nonzeros=803104803, allocated nonzeros=803104803
+                total number of mallocs used during MatSetValues calls=0
+                  not using I-node (on process 0) routines
+            KSP of A00
+              KSP Object: (fieldsplit_velocity_) 1152 MPI processes
+                type: gmres
+                  restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                  happy breakdown tolerance 1e-30
+                maximum iterations=10000, initial guess is zero
+                tolerances:  relative=0.1, absolute=1e-50, divergence=10000.
+                left preconditioning
+                using PRECONDITIONED norm type for convergence test
+              PC Object: (fieldsplit_velocity_) 1152 MPI processes
+                type: gamg
+                  type is MULTIPLICATIVE, levels=5 cycles=v
+                    Cycles per PCApply=1
+                    Using externally compute Galerkin coarse grid matrices
+                    GAMG specific options
+                      Threshold for dropping small values in graph on each level =                 0.                 0.                 0.                
+                      Threshold scaling factor for each level not specified = 1.
+                      AGG specific options
+                        Symmetric graph true
+                        Number of levels to square graph 1
+                        Number smoothing steps 1
+                      Complexity:    grid = 1.04043
+                Coarse grid solver -- level -------------------------------
+                  KSP Object: (fieldsplit_velocity_mg_coarse_) 1152 MPI processes
+                    type: preonly
+                    maximum iterations=10000, initial guess is zero
+                    tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+                    left preconditioning
+                    using NONE norm type for convergence test
+                  PC Object: (fieldsplit_velocity_mg_coarse_) 1152 MPI processes
+                    type: bjacobi
+                      number of blocks = 1152
+                      Local solve is same for all blocks, in the following KSP and PC objects:
+                    KSP Object: (fieldsplit_velocity_mg_coarse_sub_) 1 MPI processes
+                      type: preonly
+                      maximum iterations=1, initial guess is zero
+                      tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+                      left preconditioning
+                      using NONE norm type for convergence test
+                    PC Object: (fieldsplit_velocity_mg_coarse_sub_) 1 MPI processes
+                      type: lu
+                        out-of-place factorization
+                        tolerance for zero pivot 2.22045e-14
+                        using diagonal shift on blocks to prevent zero pivot [INBLOCKS]
+                        matrix ordering: nd
+                        factor fill ratio given 5., needed 1.
+                          Factored matrix follows:
+                            Mat Object: 1 MPI processes
+                              type: seqaij
+                              rows=26, cols=26
+                              package used to perform factorization: petsc
+                              total: nonzeros=676, allocated nonzeros=676
+                              total number of mallocs used during MatSetValues calls=0
+                                using I-node routines: found 6 nodes, limit used is 5
+                      linear system matrix = precond matrix:
+                      Mat Object: 1 MPI processes
+                        type: seqaij
+                        rows=26, cols=26
+                        total: nonzeros=676, allocated nonzeros=676
+                        total number of mallocs used during MatSetValues calls=0
+                          using I-node routines: found 6 nodes, limit used is 5
+                    linear system matrix = precond matrix:
+                    Mat Object: 1152 MPI processes
+                      type: mpiaij
+                      rows=26, cols=26
+                      total: nonzeros=676, allocated nonzeros=676
+                      total number of mallocs used during MatSetValues calls=0
+                        using I-node (on process 0) routines: found 6 nodes, limit used is 5
+                Down solver (pre-smoother) on level 1 -------------------------------
+                  KSP Object: (fieldsplit_velocity_mg_levels_1_) 1152 MPI processes
+                    type: chebyshev
+                      eigenvalue estimates used:  min = 0.136621, max = 1.50284
+                      eigenvalues estimate via gmres min 0.33947, max 1.36621
+                      eigenvalues estimated using gmres with translations  [0. 0.1; 0. 1.1]
+                      KSP Object: (fieldsplit_velocity_mg_levels_1_esteig_) 1152 MPI processes
+                        type: gmres
+                          restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                          happy breakdown tolerance 1e-30
+                        maximum iterations=10, initial guess is zero
+                        tolerances:  relative=1e-12, absolute=1e-50, divergence=10000.
+                        left preconditioning
+                        using PRECONDITIONED norm type for convergence test
+                      estimating eigenvalues using noisy right hand side
+                    maximum iterations=2, nonzero initial guess
+                    tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+                    left preconditioning
+                    using NONE norm type for convergence test
+                  PC Object: (fieldsplit_velocity_mg_levels_1_) 1152 MPI processes
+                    type: sor
+                      type = local_symmetric, iterations = 1, local iterations = 1, omega = 1.
+                    linear system matrix = precond matrix:
+                    Mat Object: 1152 MPI processes
+                      type: mpiaij
+                      rows=1167, cols=1167
+                      total: nonzeros=481339, allocated nonzeros=481339
+                      total number of mallocs used during MatSetValues calls=0
+                        not using I-node (on process 0) routines
+                Up solver (post-smoother) same as down solver (pre-smoother)
+                Down solver (pre-smoother) on level 2 -------------------------------
+                  KSP Object: (fieldsplit_velocity_mg_levels_2_) 1152 MPI processes
+                    type: chebyshev
+                      eigenvalue estimates used:  min = 0.171716, max = 1.88887
+                      eigenvalues estimate via gmres min 0.0537453, max 1.71716
+                      eigenvalues estimated using gmres with translations  [0. 0.1; 0. 1.1]
+                      KSP Object: (fieldsplit_velocity_mg_levels_2_esteig_) 1152 MPI processes
+                        type: gmres
+                          restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                          happy breakdown tolerance 1e-30
+                        maximum iterations=10, initial guess is zero
+                        tolerances:  relative=1e-12, absolute=1e-50, divergence=10000.
+                        left preconditioning
+                        using PRECONDITIONED norm type for convergence test
+                      estimating eigenvalues using noisy right hand side
+                    maximum iterations=2, nonzero initial guess
+                    tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+                    left preconditioning
+                    using NONE norm type for convergence test
+                  PC Object: (fieldsplit_velocity_mg_levels_2_) 1152 MPI processes
+                    type: sor
+                      type = local_symmetric, iterations = 1, local iterations = 1, omega = 1.
+                    linear system matrix = precond matrix:
+                    Mat Object: 1152 MPI processes
+                      type: mpiaij
+                      rows=52935, cols=52935
+                      total: nonzeros=30366603, allocated nonzeros=30366603
+                      total number of mallocs used during MatSetValues calls=0
+                        using nonscalable MatPtAP() implementation
+                        using I-node (on process 0) routines: found 7 nodes, limit used is 5
+                Up solver (post-smoother) same as down solver (pre-smoother)
+                Down solver (pre-smoother) on level 3 -------------------------------
+                  KSP Object: (fieldsplit_velocity_mg_levels_3_) 1152 MPI processes
+                    type: chebyshev
+                      eigenvalue estimates used:  min = 0.143735, max = 1.58108
+                      eigenvalues estimate via gmres min 0.0383695, max 1.43735
+                      eigenvalues estimated using gmres with translations  [0. 0.1; 0. 1.1]
+                      KSP Object: (fieldsplit_velocity_mg_levels_3_esteig_) 1152 MPI processes
+                        type: gmres
+                          restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                          happy breakdown tolerance 1e-30
+                        maximum iterations=10, initial guess is zero
+                        tolerances:  relative=1e-12, absolute=1e-50, divergence=10000.
+                        left preconditioning
+                        using PRECONDITIONED norm type for convergence test
+                      estimating eigenvalues using noisy right hand side
+                    maximum iterations=2, nonzero initial guess
+                    tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+                    left preconditioning
+                    using NONE norm type for convergence test
+                  PC Object: (fieldsplit_velocity_mg_levels_3_) 1152 MPI processes
+                    type: sor
+                      type = local_symmetric, iterations = 1, local iterations = 1, omega = 1.
+                    linear system matrix = precond matrix:
+                    Mat Object: 1152 MPI processes
+                      type: mpiaij
+                      rows=1380196, cols=1380196
+                      total: nonzeros=313195750, allocated nonzeros=313195750
+                      total number of mallocs used during MatSetValues calls=0
+                        using nonscalable MatPtAP() implementation
+                        not using I-node (on process 0) routines
+                Up solver (post-smoother) same as down solver (pre-smoother)
+                Down solver (pre-smoother) on level 4 -------------------------------
+                  KSP Object: (fieldsplit_velocity_mg_levels_4_) 1152 MPI processes
+                    type: chebyshev
+                      eigenvalue estimates used:  min = 0.172195, max = 1.89415
+                      eigenvalues estimate via gmres min 0.0362669, max 1.72195
+                      eigenvalues estimated using gmres with translations  [0. 0.1; 0. 1.1]
+                      KSP Object: (fieldsplit_velocity_mg_levels_4_esteig_) 1152 MPI processes
+                        type: gmres
+                          restart=30, using Classical (unmodified) Gram-Schmidt Orthogonalization with no iterative refinement
+                          happy breakdown tolerance 1e-30
+                        maximum iterations=10, initial guess is zero
+                        tolerances:  relative=1e-12, absolute=1e-50, divergence=10000.
+                        left preconditioning
+                        using PRECONDITIONED norm type for convergence test
+                      estimating eigenvalues using noisy right hand side
+                    maximum iterations=2, nonzero initial guess
+                    tolerances:  relative=1e-05, absolute=1e-50, divergence=10000.
+                    left preconditioning
+                    using NONE norm type for convergence test
+                  PC Object: (fieldsplit_velocity_mg_levels_4_) 1152 MPI processes
+                    type: sor
+                      type = local_symmetric, iterations = 1, local iterations = 1, omega = 1.
+                    linear system matrix = precond matrix:
+                    Mat Object: (fieldsplit_velocity_) 1152 MPI processes
+                      type: mpiaij
+                      rows=99228483, cols=99228483
+                      total: nonzeros=8510549769, allocated nonzeros=8510549769
+                      total number of mallocs used during MatSetValues calls=0
+                        using I-node (on process 0) routines: found 23361 nodes, limit used is 5
+                Up solver (post-smoother) same as down solver (pre-smoother)
+                linear system matrix = precond matrix:
+                Mat Object: (fieldsplit_velocity_) 1152 MPI processes
+                  type: mpiaij
+                  rows=99228483, cols=99228483
+                  total: nonzeros=8510549769, allocated nonzeros=8510549769
+                  total number of mallocs used during MatSetValues calls=0
+                    using I-node (on process 0) routines: found 23361 nodes, limit used is 5
+            A01
+              Mat Object: 1152 MPI processes
+                type: mpiaij
+                rows=99228483, cols=4173281
+                total: nonzeros=803104803, allocated nonzeros=803104803
+                total number of mallocs used during MatSetValues calls=0
+                  using I-node (on process 0) routines: found 23067 nodes, limit used is 5
+        Mat Object: (fieldsplit_pressure_) 1152 MPI processes
+          type: mpiaij
+          rows=4173281, cols=4173281
+          total: nonzeros=61979041, allocated nonzeros=61979041
+          total number of mallocs used during MatSetValues calls=0
+            not using I-node (on process 0) routines
+  linear system matrix = precond matrix:
+  Mat Object: 1152 MPI processes
+    type: mpiaij
+    rows=103401764, cols=103401764
+    total: nonzeros=10178738416, allocated nonzeros=10178738416
+    total number of mallocs used during MatSetValues calls=0
+      using I-node (on process 0) routines: found 23361 nodes, limit used is 5
+ --- system solved with PETSc (in 865.045)
+---------------------------------
+# of Elements: 24576000
+# of Dofs: 103401764
+---------------------------------
+ttttttttttttttttttttttttttttttttttttttttttttt
+Elapsed time is 994.694 s
+ttttttttttttttttttttttttttttttttttttttttttttt
+************************************************************************************************************************
+***             WIDEN YOUR WINDOW TO 120 CHARACTERS.  Use 'enscript -r -fCourier9' to print this document            ***
+************************************************************************************************************************
+
+---------------------------------------------- PETSc Performance Summary: ----------------------------------------------
+
+/share/home/zhaogang/zg/FreeFEM/New_Version/FreeFem-sources/src/mpi/FreeFem++-mpi on a  named c6u10n01 with 1152 processors, by zhaogang Wed Oct 21 20:38:46 2020
+Using Petsc Release Version 3.13.5, Sep 01, 2020 
+
+                         Max       Max/Min     Avg       Total
+Time (sec):           1.105e+03     1.000   1.105e+03
+Objects:              1.324e+03     1.003   1.322e+03
+Flop:                 2.474e+11     1.938   1.743e+11  2.008e+14
+Flop/sec:             2.239e+08     1.937   1.577e+08  1.817e+11
+MPI Messages:         4.147e+06    14.302   1.421e+06  1.637e+09
+MPI Message Lengths:  5.088e+09     5.118   1.933e+03  3.164e+12
+MPI Reductions:       4.200e+03     1.000
+
+Flop counting convention: 1 flop = 1 real number operation of type (multiply/divide/add/subtract)
+                            e.g., VecAXPY() for real vectors of length N --> 2N flop
+                            and VecAXPY() for complex vectors of length N --> 8N flop
+
+Summary of Stages:   ----- Time ------  ----- Flop ------  --- Messages ---  -- Message Lengths --  -- Reductions --
+                        Avg     %Total     Avg     %Total    Count   %Total     Avg         %Total    Count   %Total
+ 0:      Main Stage: 1.1049e+03 100.0%  2.0077e+14 100.0%  1.637e+09 100.0%  1.933e+03      100.0%  4.193e+03  99.8%
+
+------------------------------------------------------------------------------------------------------------------------
+See the 'Profiling' chapter of the users' manual for details on interpreting output.
+Phase summary info:
+   Count: number of times phase was executed
+   Time and Flop: Max - maximum over all processors
+                  Ratio - ratio of maximum to minimum over all processors
+   Mess: number of messages sent
+   AvgLen: average message length (bytes)
+   Reduct: number of global reductions
+   Global: entire computation
+   Stage: stages of a computation. Set stages with PetscLogStagePush() and PetscLogStagePop().
+      %T - percent time in this phase         %F - percent flop in this phase
+      %M - percent messages in this phase     %L - percent message lengths in this phase
+      %R - percent reductions in this phase
+   Total Mflop/s: 10e-6 * (sum of flop over all processors)/(max time over all processors)
+------------------------------------------------------------------------------------------------------------------------
+Event                Count      Time (sec)     Flop                              --- Global ---  --- Stage ----  Total
+                   Max Ratio  Max     Ratio   Max  Ratio  Mess   AvgLen  Reduct  %T %F %M %L %R  %T %F %M %L %R Mflop/s
+------------------------------------------------------------------------------------------------------------------------
+
+--- Event Stage 0: Main Stage
+
+BuildTwoSided         75 1.0 3.3231e+01 1.0 0.00e+00 0.0 1.2e+06 4.0e+00 0.0e+00  3  0  0  0  0   3  0  0  0  0     0
+BuildTwoSidedF        82 1.0 4.5775e+00 3.2 0.00e+00 0.0 1.0e+06 3.1e+04 0.0e+00  0  0  0  1  0   0  0  0  1  0     0
+MatMult            14517 1.0 6.3525e+02 1.1 2.07e+11 1.9 1.5e+09 2.0e+03 1.4e+03 55 84 91 94 33  55 84 91 94 33 263954
+MatMultAdd          6617 1.0 9.1054e+01 4.4 4.10e+09 1.7 1.5e+08 2.3e+02 0.0e+00  6  2  9  1  0   6  2  9  1  0 38407
+MatMultTranspose    6412 1.0 1.0327e+02 2.2 4.08e+09 1.7 1.5e+08 2.0e+02 0.0e+00  7  2  9  1  0   7  2  9  1  0 33653
+MatSolve            1726 0.0 7.7541e-03 0.0 3.00e+06 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0   386
+MatSOR             25725 1.0 1.7583e+02 2.0 9.39e+10 2.0 0.0e+00 0.0e+00 0.0e+00 11 38  0  0  0  11 38  0  0  0 438725
+MatLUFactorSym         2 1.0 7.8597e-03464.3 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+MatLUFactorNum         2 1.0 7.1530e-031875.1 4.18e+04 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     6
+MatConvert             7 1.0 2.4442e-01 2.3 0.00e+00 0.0 4.5e+05 5.4e+02 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+MatScale              21 1.0 2.0090e-01 3.1 2.63e+07 1.9 3.0e+05 1.6e+03 0.0e+00  0  0  0  0  0   0  0  0  0  0 104975
+MatResidual         6412 1.0 1.1839e+02 1.5 2.77e+10 1.9 3.1e+08 1.8e+03 0.0e+00  9 11 19 18  0   9 11 19 18  0 186834
+MatAssemblyBegin     162 1.0 4.3646e+00 3.0 0.00e+00 0.0 1.0e+06 3.1e+04 0.0e+00  0  0  0  1  0   0  0  0  1  0     0
+MatAssemblyEnd       162 1.0 4.5363e+01 1.2 2.28e+06 9.5 2.4e+06 7.1e+02 2.0e+02  4  0  0  0  5   4  0  0  0  5    17
+MatGetRowIJ            2 0.0 1.3709e-04 0.0 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+MatCreateSubMat       14 1.0 1.9830e+01 1.0 0.00e+00 0.0 6.0e+05 6.0e+03 1.7e+02  2  0  0  0  4   2  0  0  0  4     0
+MatGetOrdering         2 0.0 2.7108e-04 0.0 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+MatCoarsen             7 1.0 7.3724e-01 1.2 0.00e+00 0.0 5.6e+06 1.3e+03 7.1e+01  0  0  0  0  2   0  0  0  0  2     0
+MatZeroEntries         7 1.0 1.5669e-03 7.1 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+MatView               18 1.3 3.7263e-02 1.5 0.00e+00 0.0 0.0e+00 0.0e+00 2.7e+01  0  0  0  0  1   0  0  0  0  1     0
+MatAXPY                7 1.0 1.3768e-01 2.9 1.26e+05 1.8 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0   762
+MatTranspose          18 1.0 1.9218e+00 1.1 0.00e+00 0.0 1.2e+06 1.6e+04 2.4e+01  0  0  0  1  1   0  0  0  1  1     0
+MatMatMultSym         22 1.0 5.1466e+00 1.0 0.00e+00 0.0 1.4e+06 4.3e+03 6.4e+01  0  0  0  0  2   0  0  0  0  2     0
+MatMatMultNum          8 1.0 5.2081e-01 1.1 4.32e+07 2.2 3.3e+05 1.1e+04 0.0e+00  0  0  0  0  0   0  0  0  0  0 62859
+MatPtAPSymbolic        7 1.0 2.0838e+00 1.1 0.00e+00 0.0 1.5e+06 1.0e+04 4.9e+01  0  0  0  0  1   0  0  0  0  1     0
+MatPtAPNumeric         7 1.0 1.3462e+01 1.0 5.26e+08 1.9 8.5e+05 8.7e+03 2.8e+01  1  0  0  0  1   1  0  0  0  1 31347
+MatTrnMatMultSym       2 1.0 6.1982e+00 1.0 0.00e+00 0.0 4.4e+05 5.6e+04 2.2e+01  1  0  0  1  1   1  0  0  1  1     0
+MatTrnMatMultNum       2 1.0 3.6354e+00 1.0 3.15e+08 2.1 8.2e+04 5.8e+05 0.0e+00  0  0  0  2  0   0  0  0  2  0 65725
+MatGetLocalMat        27 1.0 1.3112e-01 2.0 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+MatGetBrAoCol         23 1.0 5.8713e-0110.7 0.00e+00 0.0 2.2e+06 1.0e+04 0.0e+00  0  0  0  1  0   0  0  0  1  0     0
+VecMDot             1128 1.0 1.3079e+02 2.0 6.62e+08 1.8 0.0e+00 0.0e+00 1.1e+03  9  0  0  0 27   9  0  0  0 27  4257
+VecTDot              451 1.0 1.1814e+01 1.5 5.24e+06 2.6 0.0e+00 0.0e+00 4.5e+02  1  0  0  0 11   1  0  0  0 11   319
+VecNorm             1720 1.0 7.1088e+01 1.5 3.20e+08 1.8 0.0e+00 0.0e+00 1.7e+03  5  0  0  0 41   5  0  0  0 41  3789
+VecScale            1677 1.0 8.3176e-02 3.8 1.55e+08 1.8 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0 1565689
+VecCopy            19662 1.0 1.6991e+00 4.1 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+VecSet             25672 1.0 4.0684e-01 2.0 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+VecAXPY              794 1.0 2.0729e-01 3.4 9.29e+07 1.8 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0 374462
+VecAYPX            38678 1.0 3.8942e+00 1.9 1.22e+09 1.8 0.0e+00 0.0e+00 0.0e+00  0  1  0  0  0   0  1  0  0  0 260905
+VecAXPBYCZ         12824 1.0 2.0485e+00 1.8 1.51e+09 1.8 0.0e+00 0.0e+00 0.0e+00  0  1  0  0  0   0  1  0  0  0 616476
+VecWAXPY               1 1.0 6.9499e-04 2.8 1.24e+05 1.8 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0 148782
+VecMAXPY            1471 1.0 1.7061e+00 2.2 1.02e+09 1.8 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0 504675
+VecAssemblyBegin      27 1.0 4.2957e-01 1.9 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+VecAssemblyEnd        27 1.0 4.2677e-05 2.4 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+VecPointwiseMult      77 1.0 5.6200e-03 2.0 1.39e+06 1.8 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0 205262
+VecScatterBegin    41286 1.0 1.0915e+01 8.0 0.00e+00 0.0 1.6e+09 1.9e+03 0.0e+00  0  0 99 95  0   0  0 99 95  0     0
+VecScatterEnd      41286 1.0 4.2881e+02 1.6 3.10e+0722.2 0.0e+00 0.0e+00 0.0e+00 31  0  0  0  0  31  0  0  0  0     9
+VecSetRandom           7 1.0 1.1269e-02 6.3 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+VecNormalize        1388 1.0 5.6340e+01 1.6 4.44e+08 1.8 0.0e+00 0.0e+00 1.4e+03  4  0  0  0 33   4  0  0  0 33  6643
+SFSetGraph            75 1.0 2.2392e-03 7.7 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+SFSetUp               75 1.0 3.3407e+01 1.0 0.00e+00 0.0 3.6e+06 7.5e+02 0.0e+00  3  0  0  0  0   3  0  0  0  0     0
+SFBcastOpBegin     34877 1.0 1.0048e+01 8.0 0.00e+00 0.0 1.5e+09 2.0e+03 0.0e+00  0  0 91 95  0   0  0 91 95  0     0
+SFBcastOpEnd       34877 1.0 3.8095e+02 1.9 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00 26  0  0  0  0  26  0  0  0  0     0
+SFReduceBegin       6498 1.0 8.6663e-0113.3 0.00e+00 0.0 1.5e+08 2.1e+02 0.0e+00  0  0  9  1  0   0  0  9  1  0     0
+SFReduceEnd         6498 1.0 9.4480e+01 2.5 3.10e+0722.2 0.0e+00 0.0e+00 0.0e+00  6  0  0  0  0   6  0  0  0  0    40
+SFPack             41375 1.0 2.5816e+00 4.2 0.00e+00 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     0
+SFUnpack           41375 1.0 1.8785e-0112.6 3.10e+0722.2 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0 19940
+KSPSetUp              29 1.0 1.3413e-02 2.7 0.00e+00 0.0 0.0e+00 0.0e+00 1.4e+01  0  0  0  0  0   0  0  0  0  0     0
+KSPSolve               1 1.0 8.6503e+02 1.0 2.47e+11 1.9 1.6e+09 1.9e+03 4.1e+03 78100100100 98  78100100100 99 232091
+KSPGMRESOrthog      1128 1.0 1.3144e+02 1.9 1.32e+09 1.8 0.0e+00 0.0e+00 1.1e+03  9  1  0  0 27   9  1  0  0 27  8472
+PCGAMGGraph_AGG        7 1.0 4.0350e+00 1.0 2.65e+07 1.9 2.7e+06 9.5e+03 8.0e+01  0  0  0  1  2   0  0  0  1  2  5228
+PCGAMGCoarse_AGG       7 1.0 1.1120e+01 1.0 3.15e+08 2.1 6.7e+06 1.3e+04 1.0e+02  1  0  0  3  2   1  0  0  3  2 21486
+PCGAMGProl_AGG         7 1.0 8.0243e-01 1.1 0.00e+00 0.0 9.0e+05 3.0e+03 8.4e+01  0  0  0  0  2   0  0  0  0  2     0
+PCGAMGPOpt_AGG         7 1.0 6.8556e+00 1.0 2.90e+08 1.9 4.5e+06 1.4e+03 2.6e+02  1  0  0  0  6   1  0  0  0  6 33935
+GAMG: createProl       7 1.0 2.2720e+01 1.0 6.31e+08 2.0 1.5e+07 8.0e+03 5.3e+02  2  0  1  4 13   2  0  1  4 13 21685
+  Graph               14 1.0 4.0332e+00 1.0 2.65e+07 1.9 2.7e+06 9.5e+03 8.0e+01  0  0  0  1  2   0  0  0  1  2  5231
+  MIS/Agg              7 1.0 7.3734e-01 1.2 0.00e+00 0.0 5.6e+06 1.3e+03 7.1e+01  0  0  0  0  2   0  0  0  0  2     0
+  SA: col data         7 1.0 2.9763e-01 1.2 0.00e+00 0.0 6.7e+05 3.5e+03 2.8e+01  0  0  0  0  1   0  0  0  0  1     0
+  SA: frmProl0         7 1.0 3.0638e-01 1.0 0.00e+00 0.0 2.3e+05 1.5e+03 2.8e+01  0  0  0  0  1   0  0  0  0  1     0
+  SA: smooth           7 1.0 4.8448e+00 1.0 2.64e+07 1.9 1.5e+06 9.9e+02 7.1e+01  0  0  0  0  2   0  0  0  0  2  4375
+GAMG: partLevel        7 1.0 3.4451e+01 1.0 5.26e+08 1.9 2.5e+06 9.0e+03 3.3e+02  3  0  0  1  8   3  0  0  1  8 12249
+  repartition          5 1.0 1.8978e+01 1.0 0.00e+00 0.0 1.4e+05 1.6e+02 2.5e+02  2  0  0  0  6   2  0  0  0  6     0
+  Invert-Sort          5 1.0 2.3582e-01 1.3 0.00e+00 0.0 0.0e+00 0.0e+00 3.0e+01  0  0  0  0  1   0  0  0  0  1     0
+  Move A               5 1.0 6.1237e+00 1.0 0.00e+00 0.0 5.9e+04 3.5e+02 7.0e+01  1  0  0  0  2   1  0  0  0  2     0
+  Move P               5 1.0 1.1824e+01 1.0 0.00e+00 0.0 7.2e+04 1.9e+01 7.5e+01  1  0  0  0  2   1  0  0  0  2     0
+PCSetUp                6 1.0 6.0979e+01 1.0 1.17e+09 2.0 1.8e+07 8.6e+03 9.8e+02  6  0  1  5 23   6  0  1  5 23 15237
+PCSetUpOnBlocks     1726 1.0 1.0992e-02 5.8 4.18e+04 0.0 0.0e+00 0.0e+00 0.0e+00  0  0  0  0  0   0  0  0  0  0     4
+PCApply               41 1.0 8.5137e+02 1.0 2.45e+11 1.9 1.6e+09 1.9e+03 3.9e+03 77 99100 99 94  77 99100 99 94 233385
+KSPSolve_FS_0         41 1.0 1.1679e+02 1.0 3.78e+10 1.9 2.2e+08 1.9e+03 3.6e+02 11 15 13 13  8  11 15 13 13  9 262881
+KSPSolve_FS_Schu      41 1.0 5.4886e+02 1.0 1.60e+11 1.9 1.1e+09 1.8e+03 2.6e+03 50 65 69 65 61  50 65 69 65 61 236046
+KSPSolve_FS_Low       41 1.0 1.8553e+02 1.0 4.71e+10 1.9 2.8e+08 2.3e+03 1.0e+03 17 19 17 20 24  17 19 17 20 24 206448
+------------------------------------------------------------------------------------------------------------------------
+
+Memory usage is given in bytes:
+
+Object Type          Creations   Destructions     Memory  Descendants' Mem.
+Reports information only for process 0.
+
+--- Event Stage 0: Main Stage
+
+              Matrix   260            260    871831420     0.
+      Matrix Coarsen     7              7         4452     0.
+         Vec Scatter    64             64        51200     0.
+              Vector   645            645    138750424     0.
+           Index Set   195            195      3891164     0.
+   Star Forest Graph    77             77        85952     0.
+       Krylov Solver    31             31       486536     0.
+      Preconditioner    24             24        23640     0.
+              Viewer     5              4         3360     0.
+    Distributed Mesh     1              1         5032     0.
+     Discrete System     1              1          928     0.
+         PetscRandom    14             14         9044     0.
+========================================================================================================================
+Average time to get PetscTime(): 0.
+Average time for MPI_Barrier(): 1.80244e-05
+Average time for zero size MPI_Send(): 4.69883e-06
+#PETSc Option Table entries:
+-fieldsplit_pressure_ksp_max_it 5
+-fieldsplit_pressure_ksp_type cg
+-fieldsplit_pressure_lsc_pc_type gamg
+-fieldsplit_pressure_pc_type lsc
+-fieldsplit_velocity_ksp_rtol 1e-1
+-fieldsplit_velocity_pc_gamg_sym_graph
+-fieldsplit_velocity_pc_type gamg
+-ksp_converged_reason
+-ksp_monitor_true_residual
+-ksp_rtol 1e-8
+-ksp_type fgmres
+-ksp_view
+-log_view
+-nn 10
+-pc_fieldsplit_schur_fact_type full
+-pc_fieldsplit_type schur
+-pc_type fieldsplit
+-refi 4
+-v 0
+#End of PETSc Option Table entries
+Compiled without FORTRAN kernels
+Compiled with full precision matrices (default)
+sizeof(short) 2 sizeof(int) 4 sizeof(long) 8 sizeof(void*) 8 sizeof(PetscScalar) 8 sizeof(PetscInt) 4
+Configure options: --prefix=/share/home/zhaogang/zg/FreeFEM/New_Version/ff-petsc/r MAKEFLAGS= --with-debugging=0 COPTFLAGS="-O3 -mtune=native" CXXOPTFLAGS="-O3 -mtune=native" FOPTFLAGS="-O3 -mtune=native" --with-cxx-dialect=C++11 --with-ssl=0 --with-x=0 --with-fortran-bindings=0 --with-cudac=0 --with-cc=/share/soft/mvapich2-2.3b_gcc/bin/mpicc --with-cxx=/share/soft/mvapich2-2.3b_gcc/bin/mpic++ --with-fc=/share/soft/mvapich2-2.3b_gcc/bin/mpif90 --with-scalar-type=real --with-blaslapack-include=/share/soft/intel_2018_update1/mkl/include --with-blaslapack-lib="-Wl,-rpath,/share/soft/intel_2018_update1/mkl/lib/intel64 -L/share/soft/intel_2018_update1/mkl/lib/intel64 -lmkl_rt -lmkl_sequential -lmkl_core   -liomp5 -lpthread" --download-metis --download-ptscotch --download-hypre --download-ml --download-parmetis --download-superlu_dist --download-suitesparse --download-tetgen --download-slepc --download-hpddm --download-hpddm-commit=ce6ce80 --download-scalapack --download-mumps PETSC_ARCH=fr
+-----------------------------------------
+Libraries compiled on 2020-09-11 01:40:36 on ln01 
+Machine characteristics: Linux-3.10.0-514.el7.x86_64-x86_64-with-redhat-7.3-Maipo
+Using PETSc directory: /share/home/zhaogang/zg/FreeFEM/New_Version/ff-petsc/r
+Using PETSc arch: 
+-----------------------------------------
+
+Using C compiler: /share/soft/mvapich2-2.3b_gcc/bin/mpicc  -fPIC -Wall -Wwrite-strings -Wno-strict-aliasing -Wno-unknown-pragmas -fstack-protector -fvisibility=hidden -O3 -mtune=native  
+Using Fortran compiler: /share/soft/mvapich2-2.3b_gcc/bin/mpif90  -fPIC -Wall -ffree-line-length-0 -Wno-unused-dummy-argument -O3 -mtune=native    
+-----------------------------------------
+
+Using include paths: -I/share/home/zhaogang/zg/FreeFEM/New_Version/ff-petsc/r/include -I/share/soft/intel_2018_update1/mkl/include
+-----------------------------------------
+
+Using C linker: /share/soft/mvapich2-2.3b_gcc/bin/mpicc
+Using Fortran linker: /share/soft/mvapich2-2.3b_gcc/bin/mpif90
+Using libraries: -Wl,-rpath,/share/home/zhaogang/zg/FreeFEM/New_Version/ff-petsc/r/lib -L/share/home/zhaogang/zg/FreeFEM/New_Version/ff-petsc/r/lib -lpetsc -Wl,-rpath,/share/home/zhaogang/zg/FreeFEM/New_Version/ff-petsc/r/lib -L/share/home/zhaogang/zg/FreeFEM/New_Version/ff-petsc/r/lib -Wl,-rpath,/share/soft/intel_2018_update1/mkl/lib/intel64 -L/share/soft/intel_2018_update1/mkl/lib/intel64 -Wl,-rpath,/soft/mvapich2-2.3b-gcc/lib -L/soft/mvapich2-2.3b-gcc/lib -Wl,-rpath,/usr/lib/gcc/x86_64-redhat-linux/4.8.5 -L/usr/lib/gcc/x86_64-redhat-linux/4.8.5 -Wl,-rpath,/share/soft/intel_2018_update1/compilers_and_libraries_2018.1.163/linux/ipp/lib/intel64 -L/share/soft/intel_2018_update1/compilers_and_libraries_2018.1.163/linux/ipp/lib/intel64 -Wl,-rpath,/share/soft/intel_2018_update1/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64_lin -L/share/soft/intel_2018_update1/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64_lin -Wl,-rpath,/share/soft/intel_2018_update1/compilers_and_libraries_2018.1.163/linux/mkl/lib/intel64_lin -L/share/soft/intel_2018_update1/compilers_and_libraries_2018.1.163/linux/mkl/lib/intel64_lin -Wl,-rpath,/share/soft/intel_2018_update1/compilers_and_libraries_2018.1.163/linux/tbb/lib/intel64/gcc4.7 -L/share/soft/intel_2018_update1/compilers_and_libraries_2018.1.163/linux/tbb/lib/intel64/gcc4.7 -Wl,-rpath,/share/soft/intel_2018_update1/compilers_and_libraries_2018.1.163/linux/daal/lib/intel64_lin -L/share/soft/intel_2018_update1/compilers_and_libraries_2018.1.163/linux/daal/lib/intel64_lin -Wl,-rpath,/share/soft/intel_2018_update1/compilers_and_libraries_2018.1.163/linux/tbb/lib/intel64_lin/gcc4.4 -L/share/soft/intel_2018_update1/compilers_and_libraries_2018.1.163/linux/tbb/lib/intel64_lin/gcc4.4 -lHYPRE -lcmumps -ldmumps -lsmumps -lzmumps -lmumps_common -lpord -lscalapack -lumfpack -lklu -lcholmod -lbtf -lccolamd -lcolamd -lcamd -lamd -lsuitesparseconfig -lsuperlu_dist -lml -lmkl_rt -lmkl_sequential -lmkl_core -liomp5 -lpthread -lptesmumps -lptscotchparmetis -lptscotch -lptscotcherr -lesmumps -lscotch -lscotcherr -lpthread -lparmetis -lmetis -ltet -lm -lstdc++ -ldl -lmpifort -lmpi -lgfortran -lm -lgfortran -lm -lgcc_s -lquadmath -lrt -lquadmath -lstdc++ -ldl
+-----------------------------------------
+
+
+
+PS:
+
+Read file <err.dat> for stderr output of this job.
+

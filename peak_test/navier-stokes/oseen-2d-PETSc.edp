@@ -1,0 +1,216 @@
+/***********************************************************************
+	> File Name: oseen-2d-PETSc.edp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 2020/10/22 星期四 10时43分34秒
+ ***********************************************************************/
+
+macro dimension() 2 //
+
+load "PETSc"
+
+include "macro_ddm.idp"
+include "Operator.idp"
+
+macro feV [P2, P2] //
+macro feQ P1 //
+
+real start = mpiWtime();
+
+//-----------------
+//   Parameters
+//-----------------
+int nn = getARGV("-nn", 64);
+int[int] labs = [1, 2, 4, 3];
+int s = getARGV("-split", 0);
+real Re = getARGV("-Re", 100.);
+real nu = 1./Re;
+real epsilon = getARGV("-epsilon", 0.);
+
+//-------------------------
+//   Analytic Functions
+//-------------------------
+func b1 = 2 * (2*y - 1) * (1 - (2*x - 1)^2);
+func b2 = -2 * (2*x - 1) * (1 - (2*y - 1)^2);
+/*
+func b1 = 1;
+func b2 = 0;
+func u = 4 * (y - y^2);
+func v = 0;
+func p = nu * (4 - 8*x);
+
+func ux = 0;
+func uy = 4 * (1 - 2*y);
+func vx = 0;
+func vy = 0;
+func px = -8 * nu;
+func py = 0;
+
+func uxx = 0;
+func uyy = -8;
+func vxx = 0;
+func vyy = 0;
+func f = - nu * (uxx + uyy) + b1*ux + b2*uy + px;
+func g = - nu * (vxx + vyy) + b1*vx + b2*vy + py;
+func ub = u;
+func vb = 0;
+*/
+
+//--------------------
+//   Building Mesh
+//--------------------
+meshN Th = square(nn, nn);
+buildDmesh(Th);
+fespace Ph(Th, P0);
+Ph part;
+createPartition(Th, part[], P0);
+meshN ThNo = trunc(Th, abs(part-1.)<1e-1, split=2^s, label=-111111, renum=1);
+if (s > 0)
+{
+	Th = ThNo;
+	reconstructDmesh(Th);
+}
+
+//------------------------
+//   Building FE-Space
+//------------------------
+fespace Vh(Th, feV), Qh(Th, feQ);
+Vh [uh, vh];
+Qh ph;
+
+//-------------------------------
+//   Defining Varational Form
+//-------------------------------
+varf vF([u, v], [uu, vv]) 
+	= intN(Th) ( nu*Grad(u, v)'*Grad(uu, vv) 
+			+ UgradV(b1, b2, u, v)' * [uu, vv] ) 
+	+ on(labs[3], u=1, v=0) + on(labs(0:2), u=0, v=0);
+varf vB([p], [uu, vv])
+	= intN(Th) ( - p * div(uu, vv) );
+varf vC(p, pp) = intN(Th) (epsilon * p * pp);  //pressure stabilization
+varf vrhsV([u, v], [uu, vv]) = on(labs[3], u=1, v=0) + on(labs(0:2), u=0, v=0);
+
+//------------------------
+//   Solving Equations
+//------------------------
+// Assembling dA = [[dF, dB], [dB', dC]];
+Mat dF, dC;
+{
+	macro def(u) [u, u#B] // for velocity
+	macro init(u) [u, u] // for velocity
+	createMat(Th, dF, feV);
+}
+createMat(Th, dC, feQ);
+dF = vF(Vh, Vh, tgv=-1);
+dC = vC(Qh, Qh);
+matrix B = vB(Qh, Vh);
+Mat dB(dF, dC, B);
+//ObjectView(dB, format="info");
+{ // for Dirichlet BC on dF
+	varf vonBorder([u, v], [uu, vv]) = on(labs, u=1, v=1);
+	real[int] onBorder = vonBorder(0, Vh, tgv=-1);
+	real[int] onBorderPETSc;
+	ChangeNumbering(dF, onBorder, onBorderPETSc);
+	MatZeroRows(dB, onBorderPETSc);
+}
+Mat dA = [[dF,  dB],
+		  [dB', dC]];
+real[int] rhsV = vrhsV(0, Vh, tgv=-1);
+real[int] rhsP(Qh.ndof);
+rhsP = 0;
+real[int] rhsPETSc;
+ChangeNumbering([dF, dC], [rhsV, rhsP], rhsPETSc);
+
+// Defining names of velocity and pressure fields
+real[int] list(rhsPETSc.n);
+real[int] nVPETSc;
+ChangeNumbering(dF, rhsV, nVPETSc);
+list(0 : nVPETSc.n-1) = 1;
+list(nVPETSc.n : list.n-1) = 2;
+string[int] names(2);
+names[0] = "velocity";
+names[1] = "pressure";
+
+// Building PCD preconditioner
+varf vAp(p, q) = intN(Th) (nu * grad(p)' * grad(q));  //with Neumann BC
+varf vFp(p, q) = intN(Th) (nu * grad(p)' * grad(q) + Ugradv(b1, b2, p)' * q);  //with Neumann BC
+varf vMp(p, q) = intN(Th) (p * q);
+Mat dAp(dC), dFp(dC), dMp(dC);
+dAp = vAp(Qh, Qh);
+dFp = vFp(Qh, Qh);
+dMp = vMp(Qh, Qh, sym=1);
+set(dAp, sparams="-prefix_push stiffness_ -ksp_constant_null_space -pc_type gamg -ksp_type cg -ksp_max_it 5 -prefix_pop", prefix="stiffness_");
+set(dMp, sparams="-prefix_push mass_ -pc_type jacobi -ksp_type cg -ksp_max_it 5 -prefix_pop", prefix="mass_");
+func real[int] PCD(real[int]& in)
+{
+	real[int] out(in.n);
+	KSPSolve(dAp, in, out);
+	MatMult(dFp, out, in);
+	KSPSolve(dMp, in, out);
+	out *= -1.;
+	return out;
+}
+
+//set(dA, sparams="-pc_type fieldsplit -prefix_push fieldsplit_velocity_ -pc_type gamg -pc_gamg_sym_graph -pc_gamg_threshold 0.04 -ksp_type gmres -ksp_max_it 8 -prefix_pop " + "-ksp_type fgmres -ksp_gmres_restart 200 -ksp_converged_reason -ksp_monitor", fields=list, names=names);
+set(dA, sparams="-pc_type fieldsplit -prefix_push fieldsplit_velocity_ -pc_type hypre -ksp_type gmres -prefix_pop " + "-ksp_type fgmres -ksp_gmres_restart 200 -ksp_converged_reason -ksp_monitor", fields=list, names=names);
+set(dC, parent=dA, precon=PCD, sparams="-prefix_push fieldsplit_pressure_ -pc_type shell -prefix_pop");
+//--- LSC ---
+//set(dA, sparams="-pc_type fieldsplit -pc_fieldsplit_type schur -pc_fieldsplit_schur_fact_type full " + "-prefix_push fieldsplit_velocity_ -pc_type gamg -pc_gamg_sym_graph -ksp_rtol 1e-1 -prefix_pop " + "-prefix_push fieldsplit_pressure_ -pc_type lsc -lsc_pc_type gamg -ksp_type cg -ksp_max_it 5 -prefix_pop " + "-ksp_type fgmres -ksp_converged_reason", fields=list[], names=names);
+//--- MUMPS ---
+//set(dA, sparams="-pc_type lu -pc_factor_mat_solver_type mumps -ksp_converged_reason");
+
+// Solving Oseen problem
+real[int] uhPETSc(rhsPETSc.n);
+mpiBarrier(mpiCommWorld);
+real cpuKSPSolve = mpiWtime();
+KSPSolve(dA, rhsPETSc, uhPETSc);
+if (mpirank == 0) cout << " --- system solved with PETSc (in " << mpiWtime()-cpuKSPSolve << ")" << endl;
+ChangeNumbering([dF, dC], [uh[], ph[]], uhPETSc, inverse=1, exchange=1);
+
+// Normalizing pressure
+real[int] dpAverage(2), pAverage(2);
+dpAverage[0] = intN(ThNo) ( ph );
+dpAverage[1] = ThNo.measure;
+mpiAllReduce(dpAverage, pAverage, mpiCommWorld, mpiSUM);
+ph = ph - pAverage[0]/pAverage[1];
+
+//---------------------------------------
+//   Computing # of Elements and Dofs
+//---------------------------------------
+int dNT = ThNo.nt;
+int NT;
+mpiAllReduce(dNT, NT, mpiCommWorld, mpiSUM);
+int dndofs = uhPETSc.n;
+int ndofs;
+mpiAllReduce(dndofs, ndofs, mpiCommWorld, mpiSUM);
+if (mpirank == 0)
+{
+	cout << "-----------------------------" << endl;
+	cout << "# of Elements: " << NT << endl;
+	cout << "# of Dofs: " << ndofs << endl;
+	cout << "-----------------------------" << endl;
+	cout << "ttttttttttttttttttttttttttttttttttttttttttttt" << endl;
+	cout << "Elapsed time is " << mpiWtime()-start << " s" << endl;
+	cout << "ttttttttttttttttttttttttttttttttttttttttttttt" << endl;
+}
+
+//--------------------
+//   Visualization
+//--------------------
+if (getARGV("-visual", 0))
+{
+	int[int] fforder = [1, 1];
+	savevtk("lid-driven_cavity.vtu", Th, [uh, vh], ph, dataname="velocity pressure", order=fforder);
+}
+
+/**
+ *                                          REFERENCES
+ * [1] D. Kay, D. Loghin, A. Wathen, A PRECONDITIONER FOR THE STEADY-STATE NAVIER–STOKES EQUATIONS,
+ *     SIAM J. Sci. Comput., 24(1) (2002), pp. 237-256.
+ * [2] H. Elman, V E. Howle, J. Shadid, R. Shuttleworth and R. Tuminaro, Block Preconditioners Based on Approximate Commutators,
+ *     SIAM J. Sci. Comput., 27(5) (2006), pp. 1651-1668.
+ * [3] H. Elman, V E. Howle, J. Shadid, R. Shuttleworth and R. Tuminaro, A taxonomy and comparison of parallel block multi-level 
+ *     preconditioners for the incompressible Navier–Stokes equations, J. Comput. Phys., 227(3) (2008), pp. 1790-1808.
+ * [4] J. Moulin, P. Jolivet, O. Marquet, Augmented Lagrangian preconditioner for large-scale hydrodynamic stability analysis,
+ *     Comput. Methods Appl. Mech. Engrg. 351 (2019), pp. 718-743.
+ */

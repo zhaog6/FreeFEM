@@ -1,0 +1,109 @@
+/***********************************************************************
+	> File Name: elasticity-3d-PETSc.edp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 10/13/2020 Tuesday 12:06:25 PM
+ ***********************************************************************/
+
+macro dimension() 3 //
+
+load "PETSc"
+
+include "macro_ddm.idp"
+include "Operator.idp"
+include "getARGV.idp"
+
+macro def(u) [u, u#B, u#C] //
+macro init(u) [u, u, u] //
+
+macro fe [P2, P2, P2] //
+
+real sqrt2 = sqrt(2.);
+macro epsilon(u, v, w) [dx(u), dy(v), dz(w), (dy(u) + dx(v))/sqrt2, (dz(v) + dy(w))/sqrt2, (dz(u) + dx(w))/sqrt2] //
+
+real start = mpiWtime();
+
+//-------------------
+//   Parameters
+//-------------------
+int nn = getARGV("-nn", 16);
+int[int] labs = [2, 3, 2, 1, 2, 2];
+int refi = getARGV("-refi", 0);
+
+real f = -9000.;
+real E = 1.e+8;
+real nu = 0.45;
+real tmp = 1. + nu;
+real lambda = E * nu / (tmp * (1. - 2.*nu));
+real mu = E / (2. * tmp);
+
+//--------------------
+//   Building Mesh
+//--------------------
+meshN Th = cube(10*nn, nn, nn, [10*x, y, z], label=labs);
+fespace Ph(Th, P0);
+Ph part;
+if (mpirank == 0) partitionerSeq(part[], Th, mpisize);
+partitionerPar(part[], Th, mpiCommWorld, mpisize);
+meshN ThNo = trunc(Th, abs(part-mpirank)<1e-1, split=2^refi, label=-111111, renum=1);
+Th = ThNo;
+reconstructDmesh(Th);
+int dNT = ThNo.nt;
+int NT;
+mpiAllReduce(dNT, NT, mpiCommWorld, mpiSUM);
+
+//------------------------
+//   Building FE-Space
+//------------------------
+fespace Vh(Th, fe);
+Vh [uh, vh, wh];
+
+//--------------------------------
+//   Defining Variational Form
+//--------------------------------
+varf vA([u, v, w], [uu, vv, ww]) = intN(Th) ( lambda*div(u, v, w)*div(uu, vv, ww) 
+		+ 2.*mu*(epsilon(u, v, w)'*epsilon(uu, vv, ww)) )
+	+ intN(Th) (f * ww)
+	+ on(1, u=0., v=0., w=0.);
+
+//------------------------
+//   Solving Equations
+//------------------------
+Mat dA;
+createMat(Th, dA, fe);
+dA = vA(Vh, Vh, tgv=-2);
+real[int] rhs = vA(0, Vh, tgv=-2);
+Vh[int] def(Rb)(6);
+[Rb[0], RbB[0], RbC[0]] = [1, 0, 0];
+[Rb[1], RbB[1], RbC[1]] = [0, 1, 0];
+[Rb[2], RbB[2], RbC[2]] = [0, 0, 1];
+[Rb[3], RbB[3], RbC[3]] = [y, -x, 0];
+[Rb[4], RbB[4], RbC[4]] = [-z, 0, x];
+[Rb[5], RbB[5], RbC[5]] = [0, z, -y];
+set(dA, sparams="-pc_type gamg -pc_gamg_threshold 0.02 -pc_gamg_esteig_ksp_type cg -mg_levels_esteig_ksp_type cg -ksp_type cg -ksp_rtol 1e-8 -ksp_converged_reason", nearnullspace=Rb, bs=3);
+//set(dA, sparams="-pc_type gamg -pc_gamg_sym_graph -mg_coarse_pc_type redundant -mg_levels_pc_asm_overlap 0 -mg_levels_sub_pc_type lu " + "-pc_gamg_asm_use_agg -pc_gamg_repartition -pc_gamg_square_graph 4 -pc_gamg_threshold 0.03 " + "-ksp_rtol 1e-8 -ksp_converged_reason", nearnullspace=Rb, bs=3);
+//set(dA, sparams="-pc_type hypre -prefix_push pc_hypre_boomeramg_ -coarsen_type hmis -interp_type ext+i -no_CF -agg_nl 2 -P_max 4 -prefix_pop " + "-ksp_type cg -ksp_rtol 1e-8 -ksp_converged_reason", );
+verbosity = 1;
+uh[] = dA^-1 * rhs;
+verbosity = 0;
+
+//------------------------
+//   Computing Summary
+//------------------------
+real[int] puh;
+ChangeNumbering(dA, uh[], puh);
+int dndofs =  puh.n;
+int ndofs;
+mpiAllReduce(dndofs, ndofs, mpiCommWorld, mpiSUM);
+if (mpirank == 0)
+{
+	cout << "------------------------------------" << endl;
+	cout << "# of Elements: " << NT << endl;
+	cout << "# of Dofs: " << ndofs << endl;
+	cout << "lambda = " << lambda << endl;
+	cout << "mu = " << mu << endl;
+	cout << "------------------------------------" << endl;
+	cout << "ttttttttttttttttttttttttttttttttttttttttttttt" << endl;
+	cout << "Elapsed time is " << mpiWtime()-start << " s" << endl;
+	cout << "ttttttttttttttttttttttttttttttttttttttttttttt" << endl;
+}
