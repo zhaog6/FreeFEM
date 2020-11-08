@@ -60,16 +60,13 @@ func vb = 0;
 //   Building Mesh
 //--------------------
 meshN Th = square(nn, nn);
-buildDmesh(Th);
 fespace Ph(Th, P0);
 Ph part;
-createPartition(Th, part[], P0);
-meshN ThNo = trunc(Th, abs(part-1.)<1e-1, split=2^s, label=-111111, renum=1);
-if (s > 0)
-{
-	Th = ThNo;
-	reconstructDmesh(Th);
-}
+if (mpirank == 0) partitionerSeq(part[], Th, mpisize);
+partitionerPar(part[], Th, mpiCommWorld, mpisize);
+meshN ThNo = trunc(Th, abs(part-mpirank)<1e-1, split=2^s, label=-111111, renum=1);
+Th = ThNo;
+reconstructDmesh(Th);
 
 //------------------------
 //   Building FE-Space

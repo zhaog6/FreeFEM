@@ -32,7 +32,7 @@ and $\boldsymbol f = \boldsymbol 0$.
 
 `-nn 64`: $64\times 64$ initial grid (default: $64$)
 
-`-refi 0`: refinement index (default: $0$)
+`-s 0`: refinement/splitting index (default: $0$)
 
 `-Re 100.`: Reynolds number (default: $100.$)
 
