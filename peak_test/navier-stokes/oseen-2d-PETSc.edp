@@ -64,7 +64,7 @@ fespace Ph(Th, P0);
 Ph part;
 if (mpirank == 0) partitionerSeq(part[], Th, mpisize);
 partitionerPar(part[], Th, mpiCommWorld, mpisize);
-meshN ThNo = trunc(Th, abs(part-mpirank)<1e-1, split=2^s, label=-111111, renum=1);
+meshN ThNo = trunc(Th, abs(part-mpirank)<1e-1, split=2^s, label=-111111, renum=true);
 Th = ThNo;
 reconstructDmesh(Th);
 
@@ -120,10 +120,8 @@ ChangeNumbering([dF, dC], [rhsV, rhsP], rhsPETSc);
 
 // Defining names of velocity and pressure fields
 real[int] list(rhsPETSc.n);
-real[int] nVPETSc;
-ChangeNumbering(dF, rhsV, nVPETSc);
-list(0 : nVPETSc.n-1) = 1;
-list(nVPETSc.n : list.n-1) = 2;
+list(0 : dF.n-1) = 1;
+list(dF.n : list.n-1) = 2;
 string[int] names(2);
 names[0] = "velocity";
 names[1] = "pressure";
@@ -140,7 +138,7 @@ set(dAp, sparams="-prefix_push stiffness_ -ksp_constant_null_space -pc_type gamg
 set(dMp, sparams="-prefix_push mass_ -pc_type jacobi -ksp_type cg -ksp_max_it 5 -prefix_pop", prefix="mass_");
 func real[int] PCD(real[int]& in)
 {
-	real[int] out(in.n);
+	real[int] out;
 	KSPSolve(dAp, in, out);
 	MatMult(dFp, out, in);
 	KSPSolve(dMp, in, out);
@@ -157,12 +155,12 @@ set(dC, parent=dA, precon=PCD, sparams="-prefix_push fieldsplit_pressure_ -pc_ty
 //set(dA, sparams="-pc_type lu -pc_factor_mat_solver_type mumps -ksp_converged_reason");
 
 // Solving Oseen problem
-real[int] uhPETSc(rhsPETSc.n);
+real[int] uhPETSc;
 mpiBarrier(mpiCommWorld);
 real cpuKSPSolve = mpiWtime();
 KSPSolve(dA, rhsPETSc, uhPETSc);
 if (mpirank == 0) cout << " --- system solved with PETSc (in " << mpiWtime()-cpuKSPSolve << ")" << endl;
-ChangeNumbering([dF, dC], [uh[], ph[]], uhPETSc, inverse=1, exchange=1);
+ChangeNumbering([dF, dC], [uh[], ph[]], uhPETSc, inverse=true, exchange=true);
 
 // Normalizing pressure
 real[int] dpAverage(2), pAverage(2);
