@@ -3,7 +3,7 @@
 	> Author: Zhao Gang
 	> Mail: zhaog6@lsec.cc.ac.cn
 	> Created Time: 2019/03/25 星期一 10时08分02秒
-	> Remark: Need to load "PETSc" and "SLEPc"
+	> Remark: Need to load "PETSc"
  ***********************************************************************/
 
 // Matrix operations
