@@ -5,13 +5,12 @@
 	> Created Time: 09/07/2020 Monday 08:33:43 PM
  ***********************************************************************/
 
-macro dimension 3 //
+macro dimension() 3 //
 
 load "PETSc"
 
 include "macro_ddm.idp"
 include "Operator.idp"
-include "getARGV.idp"
 
 verbosity = 0;
 

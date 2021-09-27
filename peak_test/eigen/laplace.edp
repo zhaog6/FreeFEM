@@ -7,11 +7,10 @@
 
 macro dimension() 3 //E.O.M
   
-load "SLEPc" // 加载“SLEPc”特征值求解器
+load "PETSc"
   
 include "macro_ddm.idp"
 include "Operator.idp"
-include "getARGV.idp"
   
 macro fe P1 //E.O.M.
 macro qf qfV=qfV5 //E.O.M. 
