@@ -1,0 +1,70 @@
+/*************************************************************************
+	> File Name: maxwell-hx-3d-PETSc.edp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 2021年09月14日 星期二 08:40:14
+	> Description: Copy of maxwell-3d-PETSc.edp written by Pierre Jolivet
+ ************************************************************************/
+
+macro dimension() 3 //
+
+load "PETSc"
+load "mat_edgeP1"
+load "Element_Mixte3d"
+include "macro_ddm.idp"
+include "Operator.idp"
+
+macro Pk Edge03d //
+macro PkNode P1 //
+
+int nn = getARGV("-nn", 16);
+int[int] labs = 1 : 6;
+meshN Th = cube(nn, nn, nn);
+
+int[int] n2o;
+macro ThN2O() n2o //
+buildDmesh(Th);
+fespace Vh(Th, Pk);
+Vh [uh, vh, wh];
+Mat dA;
+{
+	macro def(u) u //
+	macro init(u) u //
+	macro ThPkPart() Edge03ds0 //
+	createMat(Th, dA, Pk);
+}
+
+func f = exp(-2. * ((x - 0.5)^2 + (y - 0.5)^2 + (z - 0.5)^2));
+varf vA([u, v, w], [uu, vv, ww]) = intN(Th) (curl(u, v, w)' * curl(uu, vv, ww)
+		+ [u, v, w]' * [uu, vv, ww])
+		+ intN(Th) ([0, 0, f]' * [uu, vv, ww])
+		+ on(labs, u=0, v=0, w=0);
+dA = vA(Vh, Vh, tgv=-2);
+real[int] rhs = vA(0, Vh, tgv=-2);
+
+{
+	Mat dB;
+	createMat(Th, dB, PkNode);
+	fespace VhNode(Th, PkNode);
+	matrix G;
+	MatrixEdgeP1(G, Th);
+	Mat dG(dA, dB, G);
+	VhNode coord = x;
+	real[int] tmp;
+	ChangeNumbering(dB, coord[], tmp);
+	real[int, int] coordPETSc(3, tmp.n);
+	for (int j = 0; j < 3; ++j) {
+		for [i, ele : tmp] coordPETSc(j, i) = ele;
+		if (j == 0) {
+			coord = y;
+		} else if (j == 1) {
+			coord = z;
+		}
+		ChangeNumbering(dB, coord[], tmp);
+	}
+	set(dA, sparams="-pc_type hypre -pc_hypre_type ams -ksp_rtol 1e-8 -ksp_converged_reason", coordinates=coordPETSc, gradient=dG);
+}
+
+verbosity = 1;
+uh[] = dA^-1 * rhs;
+verbosity = 0;
