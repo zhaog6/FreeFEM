@@ -1,0 +1,45 @@
+/*************************************************************************
+	> File Name: simplest.edp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 2021年09月29日 星期三 13:11:09
+ ************************************************************************/
+
+macro dimension() 3 //
+
+load "PETSc"
+load "parmmg"
+load "mshmet"
+
+include "macro_ddm.idp"
+include "Operator.idp"
+
+macro fe P1 //
+
+int nn = getARGV("-nn", 16);
+real kappa = getARGV("-kappa", 1e+3);
+meshN Th = cube(nn, nn, nn);
+buildDmesh(Th);
+fespace Vh(Th, fe);
+func u = x * (1 - x) * y * (1 - y) * (1 - exp(-kappa * z * (1 - z)));
+
+int maxit = 10;
+real error = 5e-2;
+for (int it = 0; it < maxit; ++it) {
+	meshN ThParMmg;
+	int[int] n2o;
+	int[int][int] communicators;
+	createParMmgCommunicators(Th, ThParMmg, n2o, communicators);
+	real[int] met = mshmet(Th, u, hmin=5e-3, hmax=1e-1, err=error, aniso=true);
+	error *= 0.7;
+	fespace VhMet(Th, [P1, P1, P1, P1, P1, P1]);
+	fespace VhParMmg(ThParMmg, [P1, P1, P1, P1, P1, P1]);
+	int[int] map = restrict(VhParMmg, VhMet, n2o);
+	real[int] metParMmg(VhParMmg.ndof);
+	for [i, v : map] metParMmg[i] = met[v];
+	Th = parmmg3d(ThParMmg, metric=metParMmg, hausd=0.01, nosurf=false, nodeCommunicators=communicators, niter=3);
+	reconstructDmesh(Th);
+	{
+		savevtk("mesh.vtu", Th, append=true);
+	}
+}

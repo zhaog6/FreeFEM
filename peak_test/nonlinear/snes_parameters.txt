@@ -1,0 +1,189 @@
+'/usr/local/ff++/mpich3/ff-petsc/r/bin/mpiexec' -np 4 /usr/local/ff++/mpich3/bin/FreeFem++-mpi -nw 'driven-cavity.edp' -v 0
+----------------------------------------
+Nonlinear solver (SNES) options:
+  -snes_type <now anderson : formerly newtonls>: Nonlinear solver method (one of) newtonls newtontr nrichardson ksponly ksptransposeonly vinewtonrsls vinewtonssls ngmres qn shell ngs ncg fas ms nasm anderson aspin composite patch (SNESSetType)
+  -snes_stol <1e-08 : 1e-08>: Stop if step length less than (SNESSetTolerances)
+  -snes_atol <1e-50 : 1e-50>: Stop if function norm less than (SNESSetTolerances)
+  -snes_rtol <1e-08 : 1e-08>: Stop if decrease in function norm less than (SNESSetTolerances)
+  -snes_divergence_tolerance <10000. : 10000.>: Stop if residual norm increases by this factor (SNESSetDivergenceTolerance)
+  -snes_max_it <now 10000 : formerly 10000>: Maximum iterations (SNESSetTolerances)
+  -snes_max_funcs <now 30000 : formerly 30000>: Maximum function evaluations (SNESSetTolerances)
+  -snes_max_fail <now 1 : formerly 1>: Maximum nonlinear step failures (SNESSetMaxNonlinearStepFailures)
+  -snes_max_linear_solve_fail <now 1 : formerly 1>: Maximum failures in linear solves allowed (SNESSetMaxLinearSolveFailures)
+  -snes_error_if_not_converged: <FALSE : FALSE> Generate error if solver does not converge (SNESSetErrorIfNotConverged)
+  -snes_force_iteration: <FALSE : FALSE> Force SNESSolve() to take at least one iteration (SNESSetForceIteration)
+  -snes_check_jacobian_domain_error: <FALSE : FALSE> Check Jacobian domain error after Jacobian evaluation (SNESCheckJacobianDomainError)
+  -snes_lag_preconditioner <now 1 : formerly 1>: How often to rebuild preconditioner (SNESSetLagPreconditioner)
+  -snes_lag_preconditioner_persists: <FALSE : FALSE> Preconditioner lagging through multiple SNES solves (SNESSetLagPreconditionerPersists)
+  -snes_lag_jacobian <now 1 : formerly 1>: How often to rebuild Jacobian (SNESSetLagJacobian)
+  -snes_lag_jacobian_persists: <FALSE : FALSE> Jacobian lagging through multiple SNES solves (SNESSetLagJacobianPersists)
+  -snes_grid_sequence <now 0 : formerly 0>: Use grid sequencing to generate initial guess (SNESSetGridSequence)
+  -snes_convergence_test <now default : formerly default> Convergence test (choose one of) default skip correct_pressure (SNESSetConvergenceTest)
+  -snes_norm_schedule <now function : formerly function> SNES Norm schedule (choose one of) NONE ALWAYS INITIALONLY FINALONLY INITIALFINALONLY (SNESSetNormSchedule)
+  -snes_function_type <now unpreconditioned : formerly unpreconditioned> SNES Norm schedule (choose one of) UNPRECONDITIONED PRECONDITIONED (SNESSetFunctionType)
+  -snes_ksp_ew: <FALSE : FALSE> Use Eisentat-Walker linear system convergence test (SNESKSPSetUseEW)
+  -snes_ksp_ew_version <now 2 : formerly 2>: Version 1, 2 or 3 (SNESKSPSetParametersEW)
+  -snes_ksp_ew_rtol0 <0.3 : 0.3>: 0 <= rtol0 < 1 (SNESKSPSetParametersEW)
+  -snes_ksp_ew_rtolmax <0.9 : 0.9>: 0 <= rtolmax < 1 (SNESKSPSetParametersEW)
+  -snes_ksp_ew_gamma <1. : 1.>: 0 <= gamma <= 1 (SNESKSPSetParametersEW)
+  -snes_ksp_ew_alpha <1.61803 : 1.61803>: 1 < alpha <= 2 (SNESKSPSetParametersEW)
+  -snes_ksp_ew_alpha2 <1.61803 : 1.61803>: alpha2 (SNESKSPSetParametersEW)
+  -snes_ksp_ew_threshold <0.1 : 0.1>: 0 < threshold < 1 (SNESKSPSetParametersEW)
+  -snes_monitor_cancel: <FALSE : FALSE> Remove all monitors (SNESMonitorCancel)
+----------------------------------------
+Viewer (-snes_monitor) options:
+  -snes_monitor ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_monitor binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_monitor draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_monitor socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_monitor saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+----------------------------------------
+Viewer (-snes_monitor_short) options:
+  -snes_monitor_short ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_monitor_short binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_monitor_short draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_monitor_short socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_monitor_short saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+----------------------------------------
+Viewer (-snes_monitor_range) options:
+  -snes_monitor_range ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_monitor_range binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_monitor_range draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_monitor_range socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_monitor_range saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+----------------------------------------
+Viewer (-snes_monitor_ratio) options:
+  -snes_monitor_ratio ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_monitor_ratio binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_monitor_ratio draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_monitor_ratio socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_monitor_ratio saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+----------------------------------------
+Viewer (-snes_monitor_field) options:
+  -snes_monitor_field ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_monitor_field binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_monitor_field draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_monitor_field socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_monitor_field saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+----------------------------------------
+Viewer (-snes_monitor_solution) options:
+  -snes_monitor_solution ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_monitor_solution binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_monitor_solution draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_monitor_solution socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_monitor_solution saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+----------------------------------------
+Viewer (-snes_monitor_solution_update) options:
+  -snes_monitor_solution_update ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_monitor_solution_update binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_monitor_solution_update draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_monitor_solution_update socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_monitor_solution_update saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+----------------------------------------
+Viewer (-snes_monitor_residual) options:
+  -snes_monitor_residual ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_monitor_residual binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_monitor_residual draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_monitor_residual socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_monitor_residual saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+----------------------------------------
+Viewer (-snes_monitor_jacupdate_spectrum) options:
+  -snes_monitor_jacupdate_spectrum ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_monitor_jacupdate_spectrum binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_monitor_jacupdate_spectrum draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_monitor_jacupdate_spectrum socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_monitor_jacupdate_spectrum saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+----------------------------------------
+Viewer (-snes_monitor_fields) options:
+  -snes_monitor_fields ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_monitor_fields binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_monitor_fields draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_monitor_fields socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_monitor_fields saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+  -snes_monitor_python <now (null) : formerly (null)>: Use Python function (SNESMonitorSet)
+  -snes_monitor_lg_range: <FALSE : FALSE> Plot function range at each iteration (SNESMonitorLGRange)
+  -snes_converged_reason_view_cancel: <FALSE : FALSE> Remove all converged reason viewers (SNESConvergedReasonViewCancel)
+  -snes_fd: <FALSE : FALSE> Use finite differences (slow) to compute Jacobian (SNESComputeJacobianDefault)
+  -snes_fd_function: <FALSE : FALSE> Use finite differences (slow) to compute function from user objective (SNESObjectiveComputeFunctionDefaultFD)
+  -snes_fd_color: <FALSE : FALSE> Use finite differences with coloring to compute Jacobian (SNESComputeJacobianDefaultColor)
+  -snes_mf_operator: <FALSE : FALSE> Use a Matrix-Free Jacobian with user-provided preconditioner matrix (SNESSetUseMatrixFree)
+  -snes_mf: <FALSE : FALSE> Use a Matrix-Free Jacobian with no preconditioner matrix (SNESSetUseMatrixFree)
+  -snes_mf_version <now 1 : formerly 1>: Matrix-Free routines version 1 or 2 (None)
+  -snes_npc_side <now RIGHT : formerly RIGHT> SNES nonlinear preconditioner side (choose one of) LEFT RIGHT SYMMETRIC (SNESSetNPCSide)
+  SNES NGMRES options
+  -snes_anderson_m <now 30 : formerly 30>: Number of directions (SNES)
+  -snes_anderson_beta <1. : 1.>: Mixing parameter (SNES)
+  -snes_anderson_restart <now 30 : formerly 30>: Iterations before forced restart (SNES)
+  -snes_anderson_restart_it <now 2 : formerly 2>: Tolerance iterations before restart (SNES)
+  -snes_anderson_restart_type <now NONE : formerly NONE> Restart type (choose one of) NONE PERIODIC DIFFERENCE (SNESNGMRESSetRestartType)
+  -snes_anderson_monitor: <FALSE : FALSE> Monitor steps of Anderson Mixing (SNES)
+----------------------------------------
+Linesearch (SNESLineSearch) options:
+  -snes_linesearch_type <now basic : formerly basic>: Linesearch type (one of) shell basic l2 bt nleqerr cp ncglinear (SNESLineSearchSetType)
+----------------------------------------
+Viewer (-snes_linesearch_monitor) options:
+  -snes_linesearch_monitor ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_linesearch_monitor binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_linesearch_monitor draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_linesearch_monitor socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_linesearch_monitor saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+----------------------------------------
+Viewer (-snes_linesearch_monitor_solution_update) options:
+  -snes_linesearch_monitor_solution_update ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_linesearch_monitor_solution_update binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_linesearch_monitor_solution_update draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_linesearch_monitor_solution_update socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_linesearch_monitor_solution_update saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+  -snes_linesearch_minlambda <1e-12 : 1e-12>: Minimum step length (SNESLineSearchSetTolerances)
+  -snes_linesearch_maxstep <1e+08 : 1e+08>: Maximum step size (SNESLineSearchSetTolerances)
+  -snes_linesearch_rtol <1e-08 : 1e-08>: Relative tolerance for iterative line search (SNESLineSearchSetTolerances)
+  -snes_linesearch_atol <1e-15 : 1e-15>: Absolute tolerance for iterative line search (SNESLineSearchSetTolerances)
+  -snes_linesearch_ltol <1e-08 : 1e-08>: Change in lambda tolerance for iterative line search (SNESLineSearchSetTolerances)
+  -snes_linesearch_max_it <now 1 : formerly 1>: Maximum iterations for iterative line searches (SNESLineSearchSetTolerances)
+  -snes_linesearch_damping <1. : 1.>: Line search damping and initial step guess (SNESLineSearchSetDamping)
+  -snes_linesearch_keeplambda: <FALSE : FALSE> Use previous lambda as damping (SNESLineSearchSetKeepLambda)
+  -snes_linesearch_precheck_picard: <FALSE : FALSE> Use a correction that sometimes improves convergence of Picard iteration (SNESLineSearchPreCheckPicard)
+  -snes_linesearch_order <now 0 : formerly 0>: Order of approximation used in the line search (SNESLineSearchSetOrder)
+  -snes_linesearch_norms: <TRUE : TRUE> Compute final norms in line search (SNESLineSearchSetComputeNorms)
+----------------------------------------
+Viewer (-snes_monitor_ksp) options:
+  -snes_monitor_ksp ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_monitor_ksp binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_monitor_ksp draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_monitor_ksp socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_monitor_ksp saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+----------------------------------------
+Viewer (-snes_convergence_estimate) options:
+  -snes_convergence_estimate ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_convergence_estimate binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_convergence_estimate draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_convergence_estimate socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_convergence_estimate saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+----------------------------------------
+Viewer (-snes_view_pre) options:
+  -snes_view_pre ascii[:[filename][:[format][:append]]]: Prints object to stdout or ASCII file (PetscOptionsGetViewer)
+  -snes_view_pre binary[:[filename][:[format][:append]]]: Saves object to a binary file (PetscOptionsGetViewer)
+  -snes_view_pre draw[:[drawtype][:filename|format]] Draws object (PetscOptionsGetViewer)
+  -snes_view_pre socket[:port]: Pushes object to a Unix socket (PetscOptionsGetViewer)
+  -snes_view_pre saws[:communicatorname]: Publishes object to SAWs (PetscOptionsGetViewer)
+  0 SNES Function norm 1.513556341175e+00 
+  1 SNES Function norm 1.406200151714e+00 
+  2 SNES Function norm 4.806945930117e-01 
+  3 SNES Function norm 3.109419338637e-01 
+  4 SNES Function norm 2.751430176295e-01 
+  5 SNES Function norm 2.193726582541e-01 
+  6 SNES Function norm 2.163969304295e-01 
+  7 SNES Function norm 1.913206409914e-01 
+[mpiexec@zhaog6-MBP.local] Sending Ctrl-C to processes as requested
+[mpiexec@zhaog6-MBP.local] Press Ctrl-C again to force abort
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 55616 RUNNING AT zhaog6-MBP.local
+=   EXIT CODE: 2
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Interrupt: 2 (signal 2)
+This typically refers to a problem with your application.
+Please see the FAQ page for debugging suggestions

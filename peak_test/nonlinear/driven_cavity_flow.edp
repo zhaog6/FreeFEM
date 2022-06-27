@@ -1,0 +1,99 @@
+/***********************************************************************
+	> File Name: driven-cavity-flow.edp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 2021/12/23 星期四 12时01分57秒
+ ***********************************************************************/
+
+macro dimension() 2 //
+
+load "PETSc"
+include "macro_ddm.idp"
+include "Operator.idp"
+
+macro fe [P2, P2, P1] //
+macro feQ P1 //
+
+//-----------------
+//   Parameters
+//-----------------
+int nn = getARGV("-nn", 64);
+int[int] labs = 1 : 4;
+real Re = getARGV("-Re", 100.);
+real nu = 1./Re;
+
+//----------------------
+//   Building Mesh
+//----------------------
+meshN Th = square(nn, nn);
+buildDmesh(Th);
+
+//------------------------
+//   Building FE-Space
+//------------------------
+fespace Vh(Th, fe);
+Vh [uh, vh, ph] = [(y == 1.) ? 1. : 0., 0., 0.];
+
+//----------------------------------
+//   Solving Nonlinear Equations
+//----------------------------------
+Mat dJ;
+{
+	macro def(u) [u, u#B, u#C] //
+	macro init(u) [u, u, u] //
+	createMat(Th, dJ, fe);
+}
+set(dJ, sparams="-pc_type gamg -pc_gamg_sym_graph -pc_gamg_threshold 0.03 -ksp_type ibcgs -ksp_rtol 1e-8 -ksp_converged_reason");
+//set(dJ, sparams="-pc_type lu -ksp_converged_reason");
+
+varf vJ([u, v, p], [uu, vv, pp]) = intN(Th) (nu * Grad(u, v)' * Grad(uu, vv)
+		+ UgradV(uh, vh, u, v)' * [uu, vv] + UgradV(u, v, uh, vh)' * [uu, vv]
+		- p * div(uu, vv) + div(u, v) * pp)
+	+ on(labs, u=0, v=0);
+varf vRes([u, v, p], [uu, vv, pp]) = intN(Th) (nu * Grad(uh, vh)' * Grad(uu, vv)
+		+ UgradV(uh, vh, uh, vh)' * [uu, vv]
+		- ph * div(uu, vv) + div(uh, vh) * pp)
+	+ on(labs, u=0, v=0);
+
+func int funcJ(real[int]& inPETSc)
+{
+	ChangeNumbering(dJ, uh[], inPETSc, inverse=true, exchange=true);
+	dJ = vJ(Vh, Vh, tgv=-1);
+	return 0;
+}
+
+func real[int] funcRes(real[int]& inPETSc)
+{
+	ChangeNumbering(dJ, uh[], inPETSc, inverse=true, exchange=true);
+	real[int] out = vRes(0, Vh, tgv=-1);
+	ChangeNumbering(dJ, out, inPETSc);
+	return inPETSc;
+}
+
+real[int] uhPETSc;
+ChangeNumbering(dJ, uh[], uhPETSc);
+SNESSolve(dJ, funcJ, funcRes, uhPETSc, sparams="-snes_type newtonls -snes_monitor -snes_view -snes_converged_reason");
+ChangeNumbering(dJ, uh[], uhPETSc, inverse=true, exchange=true);
+
+//----------------------------------
+//   Solving Streamline Equations
+//----------------------------------
+fespace Qh(Th, feQ);
+Qh qh;
+varf vStreamline(q, qq) = intN(Th) (grad(q)' * grad(qq))
+	- intN(Th) (curl(uh, vh) * qq)
+	+ on(labs, q=0);
+Mat dS;
+createMat(Th, dS, feQ);
+dS = vStreamline(Qh, Qh, tgv=-2);
+real[int] rhs = vStreamline(0, Qh, tgv=-2);
+set(dS, sparams="-pc_type hypre -ksp_type cg -ksp_rtol 1e-8 -ksp_converged_reason");
+qh[] = dS^-1 * rhs;
+
+//----------------------------
+//   ParaView Visualization
+//----------------------------
+if (getARGV("-view", 0)) {
+	int[int] fforder = [1, 1];
+	savevtk("solution.vtu", Th, [uh, vh], ph, dataname="velocity pressure", order=fforder);
+}

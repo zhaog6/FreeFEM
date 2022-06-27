@@ -1,0 +1,71 @@
+/***********************************************************************
+	> File Name: movingmesh-2d-PETSc.edp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 2022/06/26 星期日 10时08分46秒
+ ***********************************************************************/
+
+macro dimension() 2 //
+
+load "PETSc"
+include "macro_ddm.idp"
+include "Operator.idp"
+
+macro fe() P1 //
+
+//----------------
+//   Parameters
+//----------------
+int nn = 64;
+int[int] labs = 1 : 4;
+
+//-------------------------------
+//   Building distributed mesh
+//-------------------------------
+border b1(t=0, 1) {x = t; y = 0; label=1;}
+border b2(t=0, 1) {x = 1; y = t; label=2;}
+border b3(t=0, 1) {x = 1-t; y = 1; label=3;}
+border b4(t=0, 1) {x = 0; y = 1-t; label=4;}
+meshN Th = buildmesh(b1(nn) + b2(nn) + b3(nn) + b4(nn));
+if (mpirank == 0) {  // correction refinement
+	for (int i = 0; i < 5; ++i) {
+		Th = adaptmesh(Th, 1./nn, IsMetric=1);
+	}
+}
+broadcast(processor(0), Th);
+buildDmesh(Th);
+
+//-----------------
+//   Moving mesh
+//-----------------
+func u = cos(2*pi*y)/10;
+func v = sin(2*pi*x)/10;
+real minArea = checkmovemesh(Th, [x+u, y+v]);
+if (minArea > 0) {
+	cout << "minArea = " << minArea << endl;
+	Th = movemesh(Th, [x+u, y+v]);
+}
+
+//-----------------------
+//   Building FE-Space
+//-----------------------
+fespace Vh(Th, fe);
+Vh uh;
+
+//---------------------------
+//   Solving linear system
+//---------------------------
+varf vPoisson(u, v) = intN(Th) (grad(u)' * grad(v)) - intN(Th) (v)
+	+ on(labs, u=0);
+Mat dA;
+createMat(Th, dA, fe);
+dA = vPoisson(Vh, Vh, tgv=-2);
+real[int] b = vPoisson(0, Vh, tgv=-2);
+set(dA, sparams="-pc_type hypre -ksp_type cg -ksp_rtol 1e-8 -ksp_converged_reason");
+uh[] = dA^-1 * b;
+
+//-------------------
+//   Visualization
+//-------------------
+macro plotparams cmm="Distributed Moving Mesh & Solution", wait=1 //
+plotD(Th, uh, plotparams);

@@ -20,6 +20,7 @@ macro curl(u, v) ( dx(v) - dy(u) ) //
 macro Curl(u) [dy(u), -dx(u)] //
 macro lap(u) ( dxx(u) + dyy(u) ) //
 macro Lap(u, v) [dxx(u) + dyy(u), dxx(v) + dyy(v)] //
+macro dn(u) (grad(u)'*[N.x, N.y]) //
 ENDIFMACRO
 
 // DIM = 3
@@ -32,4 +33,5 @@ macro div(u, v, w) ( dx(u) + dy(v) + dz(w) ) //
 macro curl(u, v, w) [dy(w) - dz(v), dz(u) - dx(w), dx(v) - dy(u)] //
 macro lap(u) ( dxx(u) + dyy(u) + dzz(u) ) //
 macro Lap(u, v, w) [dxx(u) + dyy(u) + dzz(u), dxx(v) + dyy(v) + dzz(v), dxx(w) + dyy(w) + dzz(w)] //
+macro dn(u) (grad(u)'*[N.x, N.y, N.z]) //
 ENDIFMACRO

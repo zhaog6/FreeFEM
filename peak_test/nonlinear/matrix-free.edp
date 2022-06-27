@@ -1,0 +1,53 @@
+/********************************************************************
+ *  This file is part of the FreeFEM tutorial made by               *
+ *      Pierre Jolivet <pierre.jolivet@enseeiht.fr>                 *
+ *                                                                  *
+ *  See http://jolivet.perso.enseeiht.fr/FreeFem-tutorial for more  *
+ *                                                                  *
+ *   Description: matrix-free solvers                               *
+ ********************************************************************/
+
+load "msh3"
+load "PETSc"
+include "getARGV.idp"
+int n = max(10, getARGV("-n", 10));
+meshL Th = Sline(n, [x, y, z]);
+
+func real[int] op(real[int]& in)
+{
+    real[int] out(in.n);
+    out = 0;
+    for(int i = 0; i < in.n; ++i) {
+        if(i != 0 && i != in.n - 1) {
+            out[i] = (2 * in[i] - in[i - 1] - in[i + 1])*n^2;
+        }
+        else if(i == 0)
+            out[0] = (2 * in[0] - in[1])*n^2;
+        else
+            out[in.n - 1] = (2 * in[in.n - 1] - in[in.n - 2])*n^2;
+    }
+    return out;
+}
+
+func real[int] prec(real[int]& in)
+{
+    real[int, int] A(n + 1, n + 1);
+    A = 0;
+    for(int i = 0; i < n + 1; ++i)
+        A(i, i) = 2 * n^2;
+    for(int i = 1; i < n + 1; ++i) {
+        A(i - 1, i) = -n^2;
+        A(i, i - 1) = -n^2;
+    }
+    matrix sparse = A;
+    set(sparse, solver = LU);
+    real[int] out(in.n);
+    out = sparse^-1 * in;
+    return out;
+}
+
+fespace Vh(Th, P1);
+Vh sol;
+real[int] rhs(n + 1);
+rhs = 1;
+KSPSolve(op, rhs, sol[], precon=prec, sparams = "-pc_type shell -ksp_type cg -ksp_converged_reason");

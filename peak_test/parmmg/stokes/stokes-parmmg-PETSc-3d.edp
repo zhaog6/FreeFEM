@@ -1,0 +1,83 @@
+/*************************************************************************
+	> File Name: stokes-parmmg-PETSc-3d.edp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 2021年09月29日 星期三 08:21:35
+ ************************************************************************/
+
+macro dimension() 3 //
+
+load "PETSc"
+load "parmmg"
+load "mshmet"
+
+include "macro_ddm.idp"
+include "Operator.idp"
+
+macro fe [P2, P2, P2, P1] //
+
+//---------------------
+//   Parameters
+//---------------------
+int nn = getARGV("-nn", 16);
+int[int] labs = 1 : 5;
+real Re = getARGV("-Re", 100);
+real nu = 1./Re;
+if (mpirank == 0) cout << "nu = " << nu << endl;
+
+//-----------------------
+//   Distributed Mesh
+//-----------------------
+meshN Th = cube(nn, nn, nn);
+buildDmesh(Th);
+
+//---------------------------
+//   Finite Element Space
+//---------------------------
+fespace Vh(Th, fe);
+Vh [uh, vh, wh, ph] = [(z == 1.) ? 1. : 0., 0., 0., 0.];
+
+//---------------------------
+//   Stokes Equations
+//---------------------------
+varf vStokes([u, v, w, p], [uu, vv, ww, pp]) = 
+	intN(Th) (nu * Grad(u, v, w)' * Grad(uu, vv, ww)
+		- p * div(uu, vv, ww) + div(u, v, w) * pp + 0. * p * pp)
+	+ on(labs, u=0, v=0, w=0)
+	+ on(6, u=1, v=0, w=0);
+
+int maxit = 5;
+real error = 1e-1;
+for (int it = 0; it < maxit; ++it) {
+	Mat dA;
+	{
+		macro def(u) [u, u#B, u#C, u#D] //
+		macro init(u) [u, u, u, u] //
+		createMat(Th, dA, fe);
+	}
+	dA = vStokes(Vh, Vh, tgv=-1);
+	real[int] rhs = vStokes(0, Vh, tgv=-1);
+	set(dA, sparams="-pc_type hypre -ksp_rtol 1e-8 -ksp_converged_reason");
+	verbosity = 1;
+	uh[] = dA^-1 * rhs;
+	verbosity = 0;
+	if (getARGV("-view", 0) && it == maxit-1) {
+		int[int] fforder = [1, 1];
+		savevtk("stokes-cavity.vtu", Th, [uh, vh, wh], ph, dataname="velocity pressure", order=fforder);
+		break;
+	}
+
+	meshN ThParMmg;
+	int[int] n2o;
+	int[int][int] communicators;
+	createParMmgCommunicators(Th, ThParMmg, n2o, communicators);
+	real[int] met = mshmet(Th, uh, vh, wh, hmin=2e-3, hmax=1e-1, err=error, aniso=true);
+	error *= 0.7;
+	fespace VhMet(Th, [P1, P1, P1, P1, P1, P1]);
+	fespace VhParMmg(ThParMmg, [P1, P1, P1, P1, P1, P1]);
+	int[int] map = restrict(VhParMmg, VhMet, n2o);
+	real[int] metParMmg(VhParMmg.ndof);
+	for [i, v : map] metParMmg[i] = met[v];
+	Th = parmmg3d(ThParMmg, metric=metParMmg, hausd=5., hgrad=3., nodeCommunicators=communicators, niter=3);
+	reconstructDmesh(Th);
+}
