@@ -1,0 +1,86 @@
+/***********************************************************************
+	> File Name: dg-2d-PETSc.edp
+	> Author: Zhao Gang
+	> Mail: zhaog6@lsec.cc.ac.cn
+	> Created Time: 2022/06/26 星期日 14时32分15秒
+ ***********************************************************************/
+/**
+ * Remark:
+ * jump: 定义为外部减内部。边界外为零
+ * mean: 边界上的均值定义为边对应的单元内部值
+ */
+
+macro dimension() 2 //
+
+load "PETSc"
+
+include "macro_ddm.idp"
+include "Operator.idp"
+
+macro fe() P2dc //
+
+//----------------
+//   Parameters
+//----------------
+int nn = getARGV("-nn", 16);
+int[int] labs = 1 : 4;
+real sigma = getARGV("-sigma", 0.2);
+
+//------------------------
+//   Analytic Functions
+//------------------------
+func u = cos(pi*x) * cos(pi*y);
+func ux = -pi * sin(pi*x) * cos(pi*y);
+func uy = -pi * cos(pi*x) * sin(pi*y);
+func uxx = -pi^2 * cos(pi*x) * cos(pi*y);
+func uyy = -pi^2 * cos(pi*x) * cos(pi*y);
+func f = - uxx - uyy;
+func uD = u;
+
+//----------------------
+//   Distributed Mesh
+//----------------------
+meshN Th = square(nn, nn);
+buildDmesh(Th);
+fespace Ph(Th, P0);
+Ph part;
+createPartition(Th, part[], P0);
+meshN ThNo = trunc(Th, part>1e-1, split=1, label=-111111, renum=true);
+
+//--------------
+//   FE-Space
+//--------------
+fespace Vh(Th, fe);
+Vh uh;
+
+//-------------------------------
+//   Assembling Matrix and RHS
+//-------------------------------
+varf vPoisson(u, v) = intN(Th) (grad(u)' * grad(v))
+	+ intalledges(Th) ( (jump(v) * mean(dn(u)) - jump(u) * mean(dn(v))
+			+ sigma/lenEdge * jump(u) * jump(v)) / nTonEdge )
+	+ intN(Th) (f * v)
+	+ intN1(Th) (uD * dn(v) + sigma/lenEdge * uD * v)
+	+ on(labs, u=uD);
+Mat dA;
+createMat(Th, dA, fe);
+dA = vPoisson(Vh, Vh, tgv=-1);
+real[int] b = vPoisson(0, Vh, tgv=-1);
+set(dA, sparams="-pc_type asm -sub_pc_type lu -ksp_type ibcgs -ksp_rtol 1e-12 -ksp_monitor -ksp_converged_reason");
+uh[] = dA^-1 * b;
+plotD(ThNo, uh, cmm="Non-Symmetric Interior Penalty DG Scheme");
+
+//---------------------
+//   Computing Error
+//---------------------
+real[int] dError(2), Error(2);
+dError[0] = intN(ThNo) ( (u - uh)^2 );
+dError[1] = intN(ThNo) ( (ux - dx(uh))^2 + (uy - dy(uh))^2 );
+mpiAllReduce(dError, Error, mpiCommWorld, mpiSUM);
+Error = sqrt(Error);
+if (mpirank == 0 ) {
+	cout << "---------------------------" << endl;
+	cout << "||u - uh||_0 = " << Error[0] << endl;
+	cout << "||u - uh||_1 = " << Error[1] << endl;
+	cout << "---------------------------" << endl;
+}
